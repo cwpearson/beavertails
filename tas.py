@@ -1,31 +1,15 @@
 from enum import Enum
+from pathlib import Path
+import json
 
 from pulp import LpProblem, LpMinimize, lpSum, LpVariable, value
 
+THIS_DIR = Path(__file__).parent.absolute()
 
-class Item(Enum):
-    BEAVER = 0
-    LOG = 1
-    PLANK = 2
-    WATER = 3
-    BIOFUEL = 4
-    POTATO = 5
-    POTATO_CROP = 6
-    PLANT_TREE = 7
-    TREE_OAK = 8
-    BOT = 9
-    BOT_CHASIS = 10
-    BOT_HEAD = 11
-    BOT_ARM = 12
-    METAL_BLOCK = 13
-    GEAR = 14
-    SCRAP_METAL = 15
-    TREATED_PLANK = 16
-    RESIN = 17
-    POWER = 18
-    TREE_PINE_RESIN = 19
-    CARROT = 20
-    CARROT_CROP = 21
+# create Items enum
+with open(THIS_DIR / "static" / "items.json") as f:
+    data = json.load(f)
+    Item = Enum("Items", data)
 
 
 class Rates:
