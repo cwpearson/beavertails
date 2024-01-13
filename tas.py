@@ -45,7 +45,6 @@ class Recipe:
         self.tiles = tiles
         self.inputs = inputs
         self.outputs = outputs
-        self.workers = workers
 
     def __repr__(self):
         return self.name
