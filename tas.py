@@ -243,15 +243,12 @@ RECIPES = [
     ),
 ]
 
+ITEM_IDS = dict((item, i) for i, item in enumerate(Item))
+RECIPE_IDS = dict((recipe, i) for i, recipe in enumerate(RECIPES))
 
-def construct_phase1(needs: Rates):
-    item_ids = dict((item, i) for i, item in enumerate(Item))
-    recipe_ids = dict((recipe, i) for i, recipe in enumerate(RECIPES))
 
-    # print(item_ids)
-    # print(recipe_ids)
-
-    prob = LpProblem("phase1", LpMinimize)
+def make_problem_constraints(name: str, needs: Rates):
+    prob = LpProblem(name, LpMinimize)
 
     # number of each recipe used, must be integer
     recipe_counts = []
@@ -266,10 +263,20 @@ def construct_phase1(needs: Rates):
         item_rate = lpSum(
             recipe.outputs[item] * recipe_counts[ri]
             - recipe.inputs[item] * recipe_counts[ri]
-            for recipe, ri in recipe_ids.items()
+            for recipe, ri in RECIPE_IDS.items()
         )
         prob += item_rate >= 0
         item_rates += [item_rate]
+
+    # require that particular item rates meet our needs
+    for item, per_hour in needs.items():
+        prob += item_rates[ITEM_IDS[item]] >= per_hour
+
+    return prob, recipe_counts
+
+
+def construct_phase1(needs: Rates):
+    prob, recipe_counts = make_problem_constraints("phase1", needs)
 
     # want to minimize the number of beavers
     beaver_count = 0
@@ -277,40 +284,12 @@ def construct_phase1(needs: Rates):
         beaver_count += RECIPES[ri].inputs.get(Item.BEAVER, 0) * count
     prob += beaver_count
 
-    # require that particular item rates meet our needs
-    for item, per_hour in needs.items():
-        prob += item_rates[item_ids[item]] >= per_hour
-
     # print(prob)
-
     return prob
 
 
 def construct_phase2(needs: Rates, workers):
-    item_ids = dict((item, i) for i, item in enumerate(Item))
-    recipe_ids = dict((recipe, i) for i, recipe in enumerate(RECIPES))
-
-    # print(item_ids)
-    # print(recipe_ids)
-
-    prob = LpProblem("phase2", LpMinimize)
-
-    # number of each recipe used, must be integer
-    recipe_counts = []
-    for recipe in RECIPES:
-        var = LpVariable(recipe.name, 0, cat="Integer")
-        recipe_counts += [var]
-
-    # how much each item is being produced
-    item_rates = []
-    for item in Item:
-        item_rate = lpSum(
-            recipe.outputs[item] * recipe_counts[ri]
-            - recipe.inputs[item] * recipe_counts[ri]
-            for recipe, ri in recipe_ids.items()
-        )
-        prob += item_rate >= 0
-        item_rates += [item_rate]
+    prob, recipe_counts = make_problem_constraints("phase2", needs)
 
     # require the known optimal number of beavers
     beaver_count = 0
@@ -320,10 +299,6 @@ def construct_phase2(needs: Rates, workers):
 
     # minimize tiles used
     prob += lpSum(RECIPES[ri].tiles * count for ri, count in enumerate(recipe_counts))
-
-    # require that particular item rates meet our needs
-    for item, per_hour in needs.items():
-        prob += item_rates[item_ids[item]] >= per_hour
 
     print(prob)
 
@@ -335,13 +310,13 @@ if __name__ == "__main__":
 
     prob1 = construct_phase1(needs)
 
+    print("==== PHASE 1 (optimal beavers) ====")
     status1 = prob1.solve()
     # for var in prob1.variables():
     #     print(var, value(var))
-
-    # run again, constraining to the minimum number of beavers
-    print("=========================")
     print("beavers:", value(prob1.objective))
+
+    print("==== PHASE 2 (minimum tiles) ====")
     prob2 = construct_phase2(needs, value(prob1.objective))
 
     status2 = prob2.solve()

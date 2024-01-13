@@ -20,3 +20,11 @@ A resource planning assistant for the *Timberborn* video game.
 pip install -r requirements.txt
 python tas.py
 ```
+
+## Roadmap
+
+- [ ] TUI using textual
+- [ ] Allow beavers to eat multiple foods
+- [ ] worker efficiencies
+- [ ] injuries
+- [ ] well-being
