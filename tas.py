@@ -50,6 +50,33 @@ class Recipe:
         return self.name
 
 
+def recipe_from_dict(d: dict) -> Recipe:
+    """convert a dict to a Recipe.
+    BEAVER and POWER are already a rate, so don't divide by time"""
+
+    def numeric(o):
+        if isinstance(o, str):
+            return eval(o)
+        return o
+
+    r_inputs = {}
+    for k, v in d.get("inputs", {}).items():
+        if k in ("BEAVER", "POWER"):
+            r_inputs[Item[k]] = numeric(v)
+        else:
+            r_inputs[Item[k]] = numeric(v) / numeric(d["period"])
+    r_outputs = {}
+    for k, v in d.get("outputs", {}).items():
+        if k in ("BEAVER", "POWER"):
+            r_outputs[Item[k]] = numeric(v)
+        else:
+            r_outputs[Item[k]] = numeric(v) / numeric(d["period"])
+
+    return Recipe(
+        d["name"], int(d["tiles"]), inputs=Rates(r_inputs), outputs=Rates(r_outputs)
+    )
+
+
 FARMHOUSE_RATE = 16  # FIXME: made up. Different rates for different foods?
 LUMBERJACK_RATE = 16  # FIXME: made up
 FORESTER_RATE = 16  # FIXME: made up
@@ -57,12 +84,6 @@ SCAVENGER_RATE = 16  # FIXME: made up
 TAPPER_RATE = 16  # FIXME: made up
 
 RECIPES = [
-    Recipe(
-        "Lodge (eat Carrots)",
-        4,
-        inputs=Rates({Item.WATER: 3 * 2.25 / 24, Item.CARROT: 3 * 2.75 / 24}),
-        outputs=Rates({Item.BEAVER: 3}),
-    ),
     Recipe(
         "Forester", 4, outputs=Rates({Item.PLANT_TREE: FORESTER_RATE / 24}), workers=1
     ),
@@ -122,6 +143,12 @@ RECIPES = [
         4,
         inputs=Rates({Item.BEAVER: 3, Item.CARROT_CROP: 3 * FARMHOUSE_RATE / 24}),
         outputs=Rates({Item.CARROT: 3 * FARMHOUSE_RATE / 24}),
+    ),
+    Recipe(
+        "Farmhouse (Wheat)",
+        4,
+        inputs=Rates({Item.BEAVER: 3, Item.WHEAT_CROP: 3 * FARMHOUSE_RATE / 24}),
+        outputs=Rates({Item.WHEAT: 3 * FARMHOUSE_RATE / 24}),
     ),
     Recipe(
         "Bot Assembler",
@@ -219,12 +246,13 @@ RECIPES = [
         inputs=Rates({Item.BEAVER: 1, Item.TREE_PINE_RESIN: TAPPER_RATE / 24}),
         outputs=Rates({Item.RESIN: TAPPER_RATE / 24}),
     ),
-    Recipe(
-        "Water Wheel",
-        3,
-        outputs=Rates({Item.POWER: 200}),
-    ),
 ]
+
+# load additional recipes
+with open(THIS_DIR / "static" / "recipes.json") as f:
+    data = json.load(f)
+    for d in data:
+        RECIPES += [recipe_from_dict(d)]
 
 ITEM_IDS = dict((item, i) for i, item in enumerate(Item))
 RECIPE_IDS = dict((recipe, i) for i, recipe in enumerate(RECIPES))

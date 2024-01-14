@@ -1,5 +1,6 @@
 [
     "BEAVER",
+    "BREAD",
     "LOG",
     "PLANK",
     "WATER",
@@ -20,5 +21,9 @@
     "SCRAP_METAL",
     "TREATED_PLANK",
     "RESIN",
-    "POWER"
+    "POWER",
+    "GRILLED_POTATO",
+    "WHEAT",
+    "WHEAT_FLOUR",
+    "WHEAT_CROP"
 ]

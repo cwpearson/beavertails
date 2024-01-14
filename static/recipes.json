@@ -1,0 +1,80 @@
+[
+    {
+        "name": "Bakery (bread)",
+        "tiles": 6,
+        "inputs": {
+            "WHEAT_FLOUR": 1,
+            "LOG": 0.1,
+            "BEAVER": 1
+        },
+        "outputs": {
+            "BREAD": 5
+        },
+        "period": 0.42
+    },
+    {
+        "name": "Grill (potato)",
+        "tiles": 6,
+        "inputs": {
+            "BEAVER": 1,
+            "POTATO": 1,
+            "LOG": 0.1
+        },
+        "outputs": {
+            "GRILLED_POTATO": 4
+        },
+        "period": 0.52
+    },
+    {
+        "name": "Gristmill (wheat flour)",
+        "tiles": 6,
+        "inputs": {
+            "BEAVER": 1,
+            "POWER": 60,
+            "WHEAT": 1
+        },
+        "outputs": {
+            "WHEAT_FLOUR": 1
+        },
+        "period": 0.78
+    },
+    {
+        "name": "Lodge (eat Carrots)",
+        "tiles": 4,
+        "inputs": {
+            "WATER": "3 * 2.25",
+            "CARROT": "3 * 2.75"
+        },
+        "outputs": {
+            "BEAVER": 3
+        },
+        "period": 24
+    },
+    {
+        "name": "Lodge (eat Bread)",
+        "tiles": 4,
+        "inputs": {
+            "WATER": "3 * 2.25",
+            "BREAD": "3 * 2.75"
+        },
+        "outputs": {
+            "BEAVER": 3
+        },
+        "period": 24
+    },
+    {
+        "name": "Water Wheel",
+        "tiles": 3,
+        "outputs": {
+            "POWER": 200
+        }
+    },
+    {
+        "name": "Wheat (crop)",
+        "tiles": 1,
+        "outputs": {
+            "WHEAT_CROP": 3
+        },
+        "period": "10 * 24"
+    }
+]
