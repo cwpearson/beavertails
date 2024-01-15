@@ -77,45 +77,13 @@ def recipe_from_dict(d: dict) -> Recipe:
     )
 
 
-FARMHOUSE_RATE = 16  # FIXME: made up. Different rates for different foods?
-LUMBERJACK_RATE = 16  # FIXME: made up
-FORESTER_RATE = 16  # FIXME: made up
+FARMHOUSE_PERIOD = 24 / 16  # FIXME: made up. Different rates for different foods?
+LUMBERJACK_PERIOD = 24 / 16  # FIXME: made up
+FORESTER_PERIOD = 24 / 16  # FIXME: made up
 SCAVENGER_RATE = 16  # FIXME: made up
 TAPPER_RATE = 16  # FIXME: made up
 
 RECIPES = [
-    Recipe(
-        "Forester", 4, outputs=Rates({Item.PLANT_TREE: FORESTER_RATE / 24}), workers=1
-    ),
-    Recipe(
-        "Lumberjack (Oak)",
-        1,
-        inputs=Rates({Item.BEAVER: 1, Item.TREE_OAK: LUMBERJACK_RATE / 24}),
-        outputs=Rates({Item.LOG: 8 * LUMBERJACK_RATE / 24}),
-    ),
-    Recipe(
-        "Oak (logs)",
-        1,
-        inputs=Rates({Item.PLANT_TREE: 1 / 24 / 30}),
-        outputs=Rates({Item.TREE_OAK: 8 / 24 / 30}),
-    ),
-    Recipe(
-        "Pine (resin)",
-        1,
-        outputs=Rates({Item.TREE_PINE_RESIN: 2 / 24 / 7}),
-    ),
-    Recipe(
-        "Lumber Mill",
-        6,
-        inputs=Rates({Item.BEAVER: 1, Item.LOG: 1 / 1.3, Item.POWER: 50}),
-        outputs=Rates({Item.PLANK: 1 / 1.3}),
-    ),
-    Recipe(
-        "Refinery (Potato)",
-        6,
-        inputs=Rates({Item.BEAVER: 2, Item.WATER: 2 / 3, Item.POTATO: 2 / 3}),
-        outputs=Rates({Item.BIOFUEL: 30 / 3}),
-    ),
     Recipe(
         "Potato (Crop)",
         1,
@@ -131,38 +99,6 @@ RECIPES = [
         4,
         inputs=Rates({Item.BEAVER: 1}),
         outputs=Rates({Item.WATER: 1 / 0.33}),
-    ),
-    Recipe(
-        "Farmhouse (Potato)",
-        4,
-        inputs=Rates({Item.BEAVER: 3, Item.POTATO_CROP: FARMHOUSE_RATE / 24}),
-        outputs=Rates({Item.POTATO: FARMHOUSE_RATE / 24}),
-    ),
-    Recipe(
-        "Farmhouse (Carrot)",
-        4,
-        inputs=Rates({Item.BEAVER: 3, Item.CARROT_CROP: 3 * FARMHOUSE_RATE / 24}),
-        outputs=Rates({Item.CARROT: 3 * FARMHOUSE_RATE / 24}),
-    ),
-    Recipe(
-        "Farmhouse (Wheat)",
-        4,
-        inputs=Rates({Item.BEAVER: 3, Item.WHEAT_CROP: 3 * FARMHOUSE_RATE / 24}),
-        outputs=Rates({Item.WHEAT: 3 * FARMHOUSE_RATE / 24}),
-    ),
-    Recipe(
-        "Bot Assembler",
-        9,
-        inputs=Rates(
-            {
-                Item.BEAVER: 2,
-                Item.BOT_CHASIS: 1 / 72,
-                Item.BOT_ARM: 4 / 72,
-                Item.BOT_HEAD: 1 / 72,
-                Item.POWER: 250,
-            }
-        ),
-        outputs=Rates({Item.BOT: 1 / 72}),
     ),
     Recipe(
         "Bot Part Factory (chasis)",
