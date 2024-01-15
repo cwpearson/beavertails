@@ -192,5 +192,142 @@
             "WHEAT_CROP": 3
         },
         "period": "10 * 24"
+    },
+    {
+        "name": "Potato (Crop)",
+        "tiles": 1,
+        "outputs": {
+            "POTATO_CROP": 1
+        },
+        "period": "6 * 14"
+    },
+    {
+        "name": "Carrot (Crop)",
+        "tiles": 1,
+        "outputs": {
+            "CARROT_CROP": 3
+        },
+        "period": "4 * 24"
+    },
+    {
+        "name": "Water Pump",
+        "tiles": 4,
+        "inputs": {
+            "BEAVER": 1
+        },
+        "outputs": {
+            "WATER": 1
+        },
+        "period": 0.33
+    },
+    {
+        "name": "Bot Part Factory (chasis)",
+        "tiles": 9,
+        "inputs": {
+            "BEAVER": 2,
+            "PLANK": 5,
+            "BIOFUEL": 1,
+            "METAL_BLOCK": 1,
+            "POWER": 150
+        },
+        "outputs": {
+            "BOT_CHASIS": 1
+        },
+        "period": 18
+    },
+    {
+        "name": "Bot Part Factory (head)",
+        "tiles": 9,
+        "inputs": {
+            "BEAVER": 2,
+            "PLANK": 1,
+            "GEAR": 3,
+            "METAL_BLOCK": 1,
+            "POWER": 150
+        },
+        "outputs": {
+            "BOT_HEAD": 1
+        },
+        "period": 18
+    },
+    {
+        "name": "Bot Part Factory (arm)",
+        "tiles": 9,
+        "inputs": {
+            "BEAVER": 2,
+            "PLANK": 1,
+            "GEAR": 3,
+            "POWER": 150
+        },
+        "outputs": {
+            "BOT_ARM": 1
+        },
+        "period": 4.5
+    },
+    {
+        "name": "Gear Workshop",
+        "tiles": 6,
+        "inputs": {
+            "BEAVER": 1,
+            "PLANK": 1,
+            "POWER": 120
+        },
+        "outputs": {
+            "GEAR": 1
+        },
+        "period": 3
+    },
+    {
+        "name": "Smelter",
+        "tiles": 8,
+        "inputs": {
+            "BEAVER": 1,
+            "SCRAP_METAL": 2,
+            "LOG": 0.2,
+            "POWER": 200
+        },
+        "outputs": {
+            "METAL_BLOCK": 1
+        },
+        "period": 4
+    },
+    {
+        "name": "Mine (Scrap Metal)",
+        "tiles": 25,
+        "inputs": {
+            "BEAVER": 10,
+            "TREATED_PLANK": 1,
+            "GEAR": 1
+        },
+        "outputs": {
+            "SCRAP_METAL": 2
+        },
+        "period": 1.8
+    },
+    {
+        "name": "Wood workshop",
+        "tiles": 8,
+        "inputs": {
+            "BEAVER": 1,
+            "PLANK": 1,
+            "RESIN": 1,
+            "POWER": 250
+        },
+        "outputs": {
+            "TREATED_PLANK": 1
+        },
+        "period": 3
+    },
+    {
+        "name": "Tapper's Shack (Resin)",
+        "tiles": 4,
+        "inputs": {
+            "BEAVER": 1,
+            "TREE_PINE_RESIN": 1
+        },
+        "outputs": {
+            "RESIN": 1
+        },
+        "period": "TAPPER_PERIOD"
     }
 ]
