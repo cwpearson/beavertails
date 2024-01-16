@@ -5,9 +5,10 @@ import json
 from pulp import LpProblem, LpMinimize, lpSum, LpVariable, value
 
 THIS_DIR = Path(__file__).parent.absolute()
+STATIC_DIR = THIS_DIR / ".." / "static"
 
 # create Items enum
-with open(THIS_DIR / "static" / "items.json") as f:
+with open(STATIC_DIR / "items.json") as f:
     data = json.load(f)
     Item = Enum("Items", data)
 
@@ -22,21 +23,24 @@ class Rates:
     def items(self):
         return self.rates.items()
 
-    def __iadd__(self, rhs):
-        for key, val in rhs.rates.items():
-            self.rates[key] = self.rates.get(key, 0) + val
-        return self
+    # def __iadd__(self, rhs):
+    #     for key, val in rhs.rates.items():
+    #         self.rates[key] = self.rates.get(key, 0) + val
+    #     return self
 
-    def __isub__(self, rhs):
-        for key, val in rhs.rates.items():
-            self.rates[key] = self.rates.get(key, 0) - val
-        return self
+    # def __isub__(self, rhs):
+    #     for key, val in rhs.rates.items():
+    #         self.rates[key] = self.rates.get(key, 0) - val
+    #     return self
 
     def __repr__(self):
         return repr(self.rates)
 
     def get(self, key, default):
         return self.rates.get(key, default)
+
+    def __setitem___(self, key, value):
+        self.rates[key] = value
 
 
 class Recipe:
@@ -86,7 +90,7 @@ TAPPER_PERIOD = 24 / 16  # FIXME: made up
 RECIPES = []
 
 # load additional recipes
-with open(THIS_DIR / "static" / "recipes.json") as f:
+with open(STATIC_DIR / "recipes.json") as f:
     data = json.load(f)
     for d in data:
         RECIPES += [recipe_from_dict(d)]
@@ -151,6 +155,14 @@ def construct_phase2(needs: Rates, workers):
     print(prob)
 
     return prob
+
+
+def solve(needs: Rates):
+    prob1 = construct_phase1(needs)
+    status1 = prob1.solve()
+    prob2 = construct_phase2(needs, value(prob1.objective))
+    status2 = prob2.solve()
+    return {"beavers": value(prob1.objective), "tiles": value(prob2.objective)}
 
 
 if __name__ == "__main__":

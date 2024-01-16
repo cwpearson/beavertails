@@ -18,7 +18,8 @@ A resource planning assistant for the *Timberborn* video game.
 
 ```
 pip install -r requirements.txt
-python tas.py
+python -m beavertails.lib
+python -m beavertails.tui
 ```
 
 ## Roadmap
