@@ -2,3 +2,6 @@
 .vscode
 .python-version
 **/__pycache__
+**/.DS_Store
+dist
+build

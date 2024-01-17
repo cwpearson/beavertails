@@ -22,9 +22,19 @@ python -m beavertails.lib
 python -m beavertails.tui
 ```
 
+## Building for macOS
+
+```
+pyinstaller beavertails/tui.py \
+  --add-data beavertails/static:./beavertails/static \
+  --add-data beavertails/beavertails.tcss:. \
+  --collect-all pulp \
+  --onefile
+```
+
 ## Roadmap
 
-- [ ] TUI using textual
+- [x] TUI using textual
 - [ ] Allow beavers to eat multiple foods
 - [ ] worker efficiencies
 - [ ] injuries

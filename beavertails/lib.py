@@ -8,7 +8,7 @@ from pulp.apis import PULP_CBC_CMD
 from beavertails import mypulp
 
 THIS_DIR = Path(__file__).parent.absolute()
-STATIC_DIR = THIS_DIR / ".." / "static"
+STATIC_DIR = THIS_DIR / "static"
 
 # create Items enum
 with open(STATIC_DIR / "items.json") as f:
