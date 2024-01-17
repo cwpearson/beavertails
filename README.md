@@ -58,6 +58,11 @@ pyinstaller beavertails/tui.py \
 pyinstaller beavertails/tui.py --add-data "beavertails/static;./beavertails/static" --add-data "beavertails/beavertails.tcss;." --collect-all pulp --onefile --nowindow --noconfirm
 ```
 
+## Acknowledgements
+
+* Built using [textualize/textual](https://github.com/Textualize/textual)
+* Build using [coin-or/pulp](https://github.com/coin-or/pulp)
+
 ## Roadmap
 
 - [x] TUI using textual
@@ -65,3 +70,4 @@ pyinstaller beavertails/tui.py --add-data "beavertails/static;./beavertails/stat
 - [ ] worker efficiencies
 - [ ] injuries
 - [ ] well-being
+
