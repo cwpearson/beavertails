@@ -61,7 +61,7 @@ pyinstaller beavertails/tui.py --add-data "beavertails/static;./beavertails/stat
 ## Acknowledgements
 
 * Built using [textualize/textual](https://github.com/Textualize/textual)
-* Build using [coin-or/pulp](https://github.com/coin-or/pulp)
+* Built using [coin-or/pulp](https://github.com/coin-or/pulp)
 
 ## Roadmap
 
