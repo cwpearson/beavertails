@@ -4,6 +4,8 @@ from textual.validation import Function, Number, ValidationResult, Validator
 from textual.containers import Horizontal, Vertical, VerticalScroll, Container
 from textual import work
 
+from textual.message import Message
+
 from beavertails.lib import Item, Rates, solve
 
 
@@ -26,6 +28,11 @@ class ItemList(Static):
             yield ItemInput(classes="item-input")
             yield Label("words words", id="results")
 
+    class ModelLog(Message):
+        def __init__(self, log):
+            self.log = log
+            super().__init__()
+
     @work(exclusive=True)
     async def run_model(self):
         needs = Rates({})
@@ -35,7 +42,10 @@ class ItemList(Static):
             if rate != 0:
                 needs.rates[item] = rate
         results = solve(needs)
-        self.query_one("#results").update(str(results))
+        self.query_one("#results").update(str(results["beavers"]))
+        self.post_message(self.ModelLog(results["log"]))
+
+        # raise an event so parent can update log
 
     async def on_input_submitted(self, event: Input.Submitted) -> None:
         self.run_model()
@@ -51,13 +61,17 @@ class BeavertailsApp(App):
         """Create child widgets for the app."""
         yield Header()
         yield Footer()
-        with TabbedContent("Tab 1", "Tab 2"):
+        with TabbedContent("Tab 1", "Run log"):
             yield ItemList()
-            yield Label("w00t")
+            yield Label(id="log")
 
     def action_toggle_dark(self) -> None:
         """An action to toggle dark mode."""
         self.dark = not self.dark
+
+    def on_item_list_model_log(self, message: ItemList.ModelLog) -> None:
+        """the names of this function makes textual pick it up as a handler"""
+        self.query_one("#log").update(message.log)
 
 
 if __name__ == "__main__":

@@ -3,6 +3,9 @@ from pathlib import Path
 import json
 
 from pulp import LpProblem, LpMinimize, lpSum, LpVariable, value
+from pulp.apis import PULP_CBC_CMD
+
+from beavertails import mypulp
 
 THIS_DIR = Path(__file__).parent.absolute()
 STATIC_DIR = THIS_DIR / ".." / "static"
@@ -159,10 +162,14 @@ def construct_phase2(needs: Rates, workers):
 
 def solve(needs: Rates):
     prob1 = construct_phase1(needs)
-    status1 = prob1.solve()
+    status1, log1 = mypulp.solve(prob1)
     prob2 = construct_phase2(needs, value(prob1.objective))
-    status2 = prob2.solve()
-    return {"beavers": value(prob1.objective), "tiles": value(prob2.objective)}
+    status2, log2 = mypulp.solve(prob2)
+    return {
+        "beavers": value(prob1.objective),
+        "tiles": value(prob2.objective),
+        "log": log1 + log2,
+    }
 
 
 if __name__ == "__main__":
