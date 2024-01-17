@@ -26,16 +26,6 @@ class Rates:
     def items(self):
         return self.rates.items()
 
-    # def __iadd__(self, rhs):
-    #     for key, val in rhs.rates.items():
-    #         self.rates[key] = self.rates.get(key, 0) + val
-    #     return self
-
-    # def __isub__(self, rhs):
-    #     for key, val in rhs.rates.items():
-    #         self.rates[key] = self.rates.get(key, 0) - val
-    #     return self
-
     def __repr__(self):
         return repr(self.rates)
 
@@ -165,10 +155,13 @@ def solve(needs: Rates):
     status1, log1 = mypulp.solve(prob1)
     prob2 = construct_phase2(needs, value(prob1.objective))
     status2, log2 = mypulp.solve(prob2)
+
+    vars = {(var, value(var)) for var in prob2.variables()}
     return {
         "beavers": value(prob1.objective),
         "tiles": value(prob2.objective),
         "log": log1 + log2,
+        "vars": vars,
     }
 
 

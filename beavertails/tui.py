@@ -3,6 +3,7 @@ from textual.widgets import Header, Footer, Static, TabbedContent, Label, Input
 from textual.validation import Function, Number, ValidationResult, Validator
 from textual.containers import Horizontal, Vertical, VerticalScroll, Container
 from textual import work
+from textual.reactive import reactive
 
 from textual.message import Message
 
@@ -20,6 +21,29 @@ class ItemInput(Static):
                         value="0",
                         validators=[Number(minimum=0)],
                     )
+
+
+class ItemOutput(Static):
+    items = reactive({})
+
+    def compose(self) -> ComposeResult:
+        with VerticalScroll(id="item-list"):
+            pass
+
+    def add_item(self, name, value):
+        new_entry = Label(f"{name}: {value}")
+        self.query_one("#item-list").mount(new_entry)
+
+    def remove_items(self):
+        entries = self.query("item")
+        for e in entries:
+            e.remove()
+
+    def watch_items(self):
+        """called when items changes"""
+        self.remove_items()
+        for name, value in self.items.items():
+            self.add_item(name, value)
 
 
 class ItemList(Static):
@@ -42,10 +66,10 @@ class ItemList(Static):
             if rate != 0:
                 needs.rates[item] = rate
         results = solve(needs)
-        self.query_one("#results").update(str(results["beavers"]))
-        self.post_message(self.ModelLog(results["log"]))
+        self.query_one("#results").update(str(results["vars"]))
 
-        # raise an event so parent can update log
+        # send a message for parent to update log
+        self.post_message(self.ModelLog(results["log"]))
 
     async def on_input_submitted(self, event: Input.Submitted) -> None:
         self.run_model()
