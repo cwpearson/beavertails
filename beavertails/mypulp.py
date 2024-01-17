@@ -6,6 +6,6 @@ from pulp.apis import PULP_CBC_CMD
 def solve(prob):
     with NamedTemporaryFile() as log_file:
         status = prob.solve(PULP_CBC_CMD(msg=False, logPath=log_file.name))
-        with open(log_file.name, "r") as f:
-            log = f.read()
+        log_file.seek(0)
+        log = log_file.read().decode("utf-8")
     return status, log
