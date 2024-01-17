@@ -156,7 +156,7 @@ def solve(needs: Rates):
     prob2 = construct_phase2(needs, value(prob1.objective))
     status2, log2 = mypulp.solve(prob2)
 
-    vars = {(var, value(var)) for var in prob2.variables()}
+    vars = {var: value(var) for var in prob2.variables()}
     return {
         "beavers": value(prob1.objective),
         "tiles": value(prob2.objective),
