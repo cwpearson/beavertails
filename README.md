@@ -12,7 +12,7 @@
 **L**inear
 **S**ystems)
 
-A resource planning assistant for the *Timberborn* video game by [Mechanistry](https://mechanistry.com/).
+An unofficial, unaffiliated, third-party resource planning assistant for [Mechanistry](https://mechanistry.com/)'s *Timberborn* video game.
 
 ## Binary Releases
 
