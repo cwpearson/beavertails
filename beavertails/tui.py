@@ -1,33 +1,30 @@
 from textual.app import App, ComposeResult
 from textual.widgets import Header, Footer, Static, TabbedContent, Label, Input
 from textual.validation import Function, Number, ValidationResult, Validator
-from textual.containers import Horizontal, Vertical, VerticalScroll
+from textual.containers import Horizontal, Vertical, VerticalScroll, Container
 from textual import work
 
 from beavertails.lib import Item, Rates, solve
 
 
-class ItemList(Static):
-    """pass"""
-
-    CSS = """
-    Horizontal {
-        height: 1fr;
-    }
-    """
-
+class ItemInput(Static):
     def compose(self) -> ComposeResult:
-        with Horizontal():
-            with VerticalScroll():
-                for item in Item:
-                    # with Horizontal(id=f"horiz-{item.name}"):
+        with VerticalScroll():
+            for item in Item:
+                with Horizontal(classes="item-input-row"):
                     yield Label(item.name)
                     yield Input(
                         id=f"{item.name}-input",
                         value="0",
                         validators=[Number(minimum=0)],
                     )
-            yield Label("blah", id="results")
+
+
+class ItemList(Static):
+    def compose(self) -> ComposeResult:
+        with Horizontal():
+            yield ItemInput(classes="item-input")
+            yield Label("words words", id="results")
 
     @work(exclusive=True)
     async def run_model(self):
@@ -42,18 +39,12 @@ class ItemList(Static):
 
     async def on_input_submitted(self, event: Input.Submitted) -> None:
         self.run_model()
-        # try:
-        #     input_color = Color.parse(event.value)
-        # except ColorParseError:
-        #     pass
-        # else:
-        #     self.query_one(Input).value = ""
-        #     self.color = input_color
 
 
 class BeavertailsApp(App):
     """A Textual app"""
 
+    CSS_PATH = "beavertails.tcss"
     BINDINGS = [("d", "toggle_dark", "Toggle dark mode")]
 
     def compose(self) -> ComposeResult:

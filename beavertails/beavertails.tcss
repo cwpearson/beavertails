@@ -1,0 +1,21 @@
+#results {
+    width: 1fr; /*otherwise, grow to fill screen width*/
+}
+
+.item-input {
+    width: 2fr; /*otherwise, grow to fill screen width*/
+}
+
+.item-input-row {
+    height: 3;
+}
+
+.item-input-row Label {
+    height: 1fr;
+    width: 1fr;
+}
+
+.item-input-row Input {
+    height: 1fr;
+    width: 3fr;
+}
