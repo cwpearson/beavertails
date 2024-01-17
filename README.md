@@ -16,12 +16,12 @@ A resource planning assistant for the *Timberborn* video game by [Mechanistry](h
 
 ## Binary Releases
 
-Please see https://github.com/cwpearson/beavertails/releases for the latest releases, built on
+Please the latest prebuilt binaries on [cwpearson/beavertails](https://github.com/cwpearson/beavertails/releases) for
 * macOS 11
 * Ubuntu 20.04
 * Windows 2019
 
-If you are using an older OS than that, the binary releases may not work and you'll need to download the source and run it yourself.
+If you are using an older operating system the binary releases may not work and you'll need to download the source and run it yourself.
 
 ## Running from Source
 
