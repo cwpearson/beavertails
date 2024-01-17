@@ -86,7 +86,7 @@ class BeavertailsApp(App):
         """Create child widgets for the app."""
         yield Header()
         yield Footer()
-        with TabbedContent("Tab 1", "Run log"):
+        with TabbedContent("Input Rates", "Solver Log"):
             yield ItemList()
             yield Label(id="log")
 
