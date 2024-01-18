@@ -30,6 +30,20 @@ class ItemInput(Static):
                         validators=[Number(minimum=0)],
                     )
 
+    class Needs(Message):
+        def __init__(self, data):
+            self.data = data
+            super().__init__()
+
+    def on_input_submitted(self, event: Input.Submitted) -> None:
+        """gather up requested needs and post them up"""
+        # event.stop()  # don't bubble up
+        if event.validation_result == True:
+            data = {}
+            for item in Item:
+                data[item] = float(self.query_one(f"#{item.name}-input").value)
+            self.post_message(ItemInput.Needs(data))
+
 
 class ItemOutput(Static):
     data = reactive(dict())
@@ -152,6 +166,10 @@ class BeavertailsApp(App):
     def on_settings_changed(self, message: Settings.Changed) -> None:
         """capture changed settings"""
         self.settings = message.data
+
+    def on_item_input_needs(self, message: ItemInput.Needs) -> None:
+        """capture changed needs"""
+        self.needs = message.data
 
 
 if __name__ == "__main__":
