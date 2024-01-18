@@ -66,7 +66,9 @@ pyinstaller beavertails/tui.py --add-data "beavertails/static;./beavertails/stat
 ## Roadmap
 
 - [x] TUI using textual
-- [ ] Allow beavers to eat multiple foods
+- [ ] configurable workday length
+- [ ] configurable other parameters
+- [ ] Beavers eat multiple foods
 - [ ] worker efficiencies
 - [ ] injuries
 - [ ] well-being
