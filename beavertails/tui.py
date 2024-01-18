@@ -1,5 +1,13 @@
 from textual.app import App, ComposeResult
-from textual.widgets import Header, Footer, Static, TabbedContent, Label, Input
+from textual.widgets import (
+    Header,
+    Footer,
+    Static,
+    TabbedContent,
+    Label,
+    Input,
+    Collapsible,
+)
 from textual.validation import Function, Number, ValidationResult, Validator
 from textual.containers import Horizontal, Vertical, VerticalScroll, Container
 from textual import work
@@ -76,27 +84,74 @@ class ItemList(Static):
         self.run_model()
 
 
+class Settings(Static):
+    def compose(self) -> ComposeResult:
+        with Collapsible(title="Work Periods"):
+            yield Label(
+                "How many hours does it take for a beaver at this building to do one unit of work?"
+            )
+        yield Input(id="farmhouse_period", value="0.75", type="number")
+        yield Input(id="lumberjack_period", value="0.75", type="number")
+        yield Input(id="forester_period", value="0.75", type="number")
+        yield Input(id="scavenger_period", value="0.75", type="number")
+        yield Input(id="tapper_period", value="0.75", type="number")
+        yield Static("Global")
+        # working hours
+        yield Input(id="working_hours", value="16", type="integer")
+        # efficiency
+        yield Input(id="efficiency", value="0.9", type="number")
+
+    class Changed(Message):
+        def __init__(self, data):
+            self.data = data
+            super().__init__()
+
+    def on_input_changed(self, event: Input.Changed) -> None:
+        # stop this event from going up
+        event.stop()
+
+        # retrieve all settings
+        data = {}
+        for float_key in [
+            "farmhouse_period",
+            "lumberjack_period",
+            "forester_period",
+            "scavenger_period",
+            "tapper_period",
+            "efficiency",
+        ]:
+            if event.validation_result == True:
+                data[float_key] = float(self.query_one(f"#{float_key}").value)
+        for int_key in [
+            "working_hours",
+        ]:
+            if event.validation_result == True:
+                data[int_key] = int(self.query_one(f"#{int_key}").value)
+        # send them up
+        self.post_message(self.Changed(data))
+
+
 class BeavertailsApp(App):
     """A Textual app"""
 
     CSS_PATH = "beavertails.tcss"
-    BINDINGS = [("d", "toggle_dark", "Toggle dark mode")]
 
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
         yield Header()
         yield Footer()
-        with TabbedContent("Input Rates", "Solver Log"):
+        with TabbedContent("Input Rates", "Settings", "Solver Log"):
             yield ItemList()
+            yield Settings(id="settings")
             yield Label(id="log")
 
-    def action_toggle_dark(self) -> None:
-        """An action to toggle dark mode."""
-        self.dark = not self.dark
-
     def on_item_list_model_log(self, message: ItemList.ModelLog) -> None:
-        """the names of this function makes textual pick it up as a handler"""
+        """the name of this function makes textual pick it up as a handler"""
         self.query_one("#log").update(message.log)
+
+    def on_settings_changed(self, message: Settings.Changed) -> None:
+        """capture changed settings"""
+        self.settings = message.data
 
 
 if __name__ == "__main__":
