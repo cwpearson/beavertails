@@ -16,7 +16,7 @@ An unofficial, unaffiliated, third-party resource planning assistant for [Mechan
 
 ## Binary Releases
 
-Please the latest prebuilt binaries on [cwpearson/beavertails](https://github.com/cwpearson/beavertails/releases) for
+Prebuilt binaries are available on the [releases](https://github.com/cwpearson/beavertails/releases) page for
 * macOS 11
 * Ubuntu 20.04
 * Windows 2019
