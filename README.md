@@ -68,6 +68,7 @@ pyinstaller beavertails/tui.py --add-data "beavertails/static;./beavertails/stat
 - [x] TUI using textual
 - [ ] configurable workday length
 - [ ] configurable other parameters
+- [ ] use `.spec` for pyInstaller
 - [ ] Beavers eat multiple foods
 - [ ] worker efficiencies
 - [ ] injuries
