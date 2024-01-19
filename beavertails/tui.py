@@ -15,6 +15,7 @@ from textual.reactive import reactive
 
 from textual.message import Message
 
+import beavertails
 from beavertails.lib import Item, Rates, solve
 
 
@@ -37,8 +38,7 @@ class ItemInput(Static):
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         """gather up requested needs and post them up"""
-        # event.stop()  # don't bubble up the changed input event
-        # raise RuntimeError(event.validation_result)
+        event.stop()  # don't bubble up the changed input event
         if event.validation_result.is_valid:
             data = {}
             for item in Item:
@@ -81,45 +81,45 @@ class Settings(Static):
     def compose(self) -> ComposeResult:
         with Collapsible(title="Work Building Rates"):
             yield Static(
-                "How many units of work (e.g. chop a tree tile) can a beaver at this building do per hour?"
+                "How long does it take this building to do one unit of work (e.g. chop a tree tile)?"
             )
         with VerticalScroll():
             with Horizontal(classes="labeled-setting"):
                 yield Label("Farmhouse")
                 yield Input(
-                    id="farmhouse_rate",
+                    id="farmhouse_period",
                     value="0.75",
                     type="number",
                 )
-                yield Label("per hour", classes="labeled-setting unit")
+                yield Label("hours", classes="labeled-setting unit")
             with Horizontal(classes="labeled-setting"):
                 yield Label("Lumberjack")
                 yield Input(
-                    id="lumberjack_rate",
+                    id="lumberjack_period",
                     value="0.75",
                     type="number",
                 )
-                yield Label("per hour", classes="labeled-setting unit")
+                yield Label("hours", classes="labeled-setting unit")
             with Horizontal(classes="labeled-setting"):
                 yield Label("Forester")
                 yield Input(
-                    id="forester_rate",
+                    id="forester_period",
                     value="0.75",
                     type="number",
                 )
-                yield Label("per hour", classes="labeled-setting unit")
+                yield Label("hours", classes="labeled-setting unit")
             with Horizontal(classes="labeled-setting"):
                 yield Label("Scavenger")
                 yield Input(
-                    id="scavenger_rate",
+                    id="scavenger_period",
                     value="0.75",
                     type="number",
                 )
-                yield Label("per hour", classes="labeled-setting unit")
+                yield Label("hours", classes="labeled-setting unit")
             with Horizontal(classes="labeled-setting"):
                 yield Label("Tapper")
-                yield Input(id="tapper_rate", value="0.75", type="number")
-                yield Label("per hour", classes="labeled-setting unit")
+                yield Input(id="tapper_period", value="0.75", type="number")
+                yield Label("hours", classes="labeled-setting unit")
             yield Static("Global Settings")
             # working hours
             with Horizontal(classes="labeled-setting"):
@@ -144,11 +144,11 @@ class Settings(Static):
         # retrieve all settings
         data = {}
         for float_key in [
-            "farmhouse_rate",
-            "lumberjack_rate",
-            "forester_rate",
-            "scavenger_rate",
-            "tapper_rate",
+            "farmhouse_period",
+            "lumberjack_period",
+            "forester_period",
+            "scavenger_period",
+            "tapper_period",
             "efficiency",
         ]:
             if event.validation_result.is_valid:
@@ -186,7 +186,7 @@ class BeavertailsApp(App):
         needs = Rates({})
         for item, rate in self.needs.items():
             needs.rates[item] = rate
-        results = solve(needs)
+        results = solve(needs, beavertails.lib.Settings())
         self.query_one("#results").data = results["vars"]
         self.query_one("#log").update(results["log"])
 

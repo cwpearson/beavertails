@@ -37,7 +37,7 @@
         "outputs": {
             "POTATO": 1
         },
-        "period": "FARMHOUSE_PERIOD"
+        "period": "settings.farmhouse_period"
     },
     {
         "name": "Farmhouse (Carrot)",
@@ -49,7 +49,7 @@
         "outputs": {
             "CARROT": 3
         },
-        "period": "FARMHOUSE_PERIOD"
+        "period": "settings.farmhouse_period"
     },
     {
         "name": "Farmhouse (Wheat)",
@@ -61,7 +61,7 @@
         "outputs": {
             "WHEAT": 3
         },
-        "period": "FARMHOUSE_PERIOD"
+        "period": "settings.farmhouse_period"
     },
     {
         "name": "Forester",
@@ -69,7 +69,7 @@
         "outputs": {
             "PLANT_TREE": 1
         },
-        "period": "FORESTER_PERIOD"
+        "period": "settings.forester_period"
     },
     {
         "name": "Grill (potato)",
@@ -131,7 +131,7 @@
         "outputs": {
             "LOG": 8
         },
-        "period": "LUMBERJACK_PERIOD"
+        "period": "settings.lumberjack_period"
     },
     {
         "name": "Lumber Mill",
@@ -328,6 +328,6 @@
         "outputs": {
             "RESIN": 1
         },
-        "period": "TAPPER_PERIOD"
+        "period": "settings.tapper_period"
     }
 ]

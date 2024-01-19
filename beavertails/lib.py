@@ -36,6 +36,17 @@ class Rates:
         self.rates[key] = value
 
 
+class Settings:
+    def __init__(self):
+        self.working_hours = 16
+        self.efficiency = 0.9
+        self.lumberjack_period = 0.75
+        self.tapper_period = 0.75
+        self.gatherer_period = 0.75
+        self.forester_period = 0.75
+        self.farmhouse_period = 0.75
+
+
 class Recipe:
     def __init__(self, name, tiles, inputs=Rates({}), outputs=Rates({}), workers=0):
         self.name = name
@@ -47,57 +58,65 @@ class Recipe:
         return self.name
 
 
-def recipe_from_dict(d: dict) -> Recipe:
-    """convert a dict to a Recipe.
-    BEAVER and POWER are already a rate, so don't divide by time"""
-
-    def numeric(o):
-        if isinstance(o, str):
-            return eval(o)
-        return o
-
-    r_inputs = {}
-    for k, v in d.get("inputs", {}).items():
-        if k in ("BEAVER", "POWER"):
-            r_inputs[Item[k]] = numeric(v)
-        else:
-            r_inputs[Item[k]] = numeric(v) / numeric(d["period"])
-    r_outputs = {}
-    for k, v in d.get("outputs", {}).items():
-        if k in ("BEAVER", "POWER"):
-            r_outputs[Item[k]] = numeric(v)
-        else:
-            r_outputs[Item[k]] = numeric(v) / numeric(d["period"])
-
-    return Recipe(
-        d["name"], int(d["tiles"]), inputs=Rates(r_inputs), outputs=Rates(r_outputs)
-    )
-
-
-FARMHOUSE_PERIOD = 24 / 16  # FIXME: made up. Different rates for different foods?
-LUMBERJACK_PERIOD = 24 / 16  # FIXME: made up
-FORESTER_PERIOD = 24 / 16  # FIXME: made up
-SCAVENGER_PERIOD = 24 / 16  # FIXME: made up
-TAPPER_PERIOD = 24 / 16  # FIXME: made up
-
 RECIPES = []
 
 # load additional recipes
 with open(STATIC_DIR / "recipes.json") as f:
-    data = json.load(f)
-    for d in data:
-        RECIPES += [recipe_from_dict(d)]
+    RECIPES = json.load(f)
 
 ITEM_IDS = dict((item, i) for i, item in enumerate(Item))
-RECIPE_IDS = dict((recipe, i) for i, recipe in enumerate(RECIPES))
 
 
-def make_problem_constraints(name: str, needs: Rates):
+def recipe_with_settings(raw_recipe: dict, settings: Settings) -> Recipe:
+    """convert a dict to a Recipe.
+    BEAVER and POWER are already a rate, so don't divide by time"""
+
+    # numeric() is running eval, and the json
+    # recipe definitions are looking for specific variables to be
+    # set in this scope.
+    scope = locals()
+
+    def numeric(o):
+        if isinstance(o, str):
+            return eval(
+                o,
+                None,  # globals
+                scope,  # locals
+            )
+        return o
+
+    r_inputs = {}
+    for k, v in raw_recipe.get("inputs", {}).items():
+        if k in ("BEAVER", "POWER"):
+            r_inputs[Item[k]] = numeric(v)
+        else:
+            r_inputs[Item[k]] = numeric(v) / numeric(raw_recipe["period"])
+    r_outputs = {}
+    for k, v in raw_recipe.get("outputs", {}).items():
+        if k in ("BEAVER", "POWER"):
+            r_outputs[Item[k]] = numeric(v)
+        else:
+            r_outputs[Item[k]] = numeric(v) / numeric(raw_recipe["period"])
+
+    return Recipe(
+        raw_recipe["name"],
+        int(raw_recipe["tiles"]),
+        inputs=Rates(r_inputs),
+        outputs=Rates(r_outputs),
+    )
+
+
+def recipes_with_settings(settings: Settings):
+    return [recipe_with_settings(raw_recipe, settings) for raw_recipe in RECIPES]
+
+
+def make_problem_constraints(name: str, needs: Rates, settings: Settings):
     prob = LpProblem(name, LpMinimize)
+    recipes = recipes_with_settings(settings)
 
     # number of each recipe used, must be integer
     recipe_counts = []
-    for recipe in RECIPES:
+    for recipe in recipes:
         var = LpVariable(recipe.name, 0, cat="Integer")
         recipe_counts += [var]
 
@@ -108,7 +127,7 @@ def make_problem_constraints(name: str, needs: Rates):
         item_rate = lpSum(
             recipe.outputs[item] * recipe_counts[ri]
             - recipe.inputs[item] * recipe_counts[ri]
-            for recipe, ri in RECIPE_IDS.items()
+            for ri, recipe in enumerate(recipes)
         )
         prob += item_rate >= 0
         item_rates += [item_rate]
@@ -117,43 +136,43 @@ def make_problem_constraints(name: str, needs: Rates):
     for item, per_hour in needs.items():
         prob += item_rates[ITEM_IDS[item]] >= per_hour
 
-    return prob, recipe_counts
+    return prob, recipes, recipe_counts
 
 
-def construct_phase1(needs: Rates):
-    prob, recipe_counts = make_problem_constraints("phase1", needs)
+def construct_phase1(needs: Rates, settings: Settings):
+    prob, recipes, recipe_counts = make_problem_constraints("phase1", needs, settings)
 
     # want to minimize the number of beavers
     beaver_count = 0
     for ri, count in enumerate(recipe_counts):
-        beaver_count += RECIPES[ri].inputs.get(Item.BEAVER, 0) * count
+        beaver_count += recipes[ri].inputs.get(Item.BEAVER, 0) * count
     prob += beaver_count
 
     # print(prob)
     return prob
 
 
-def construct_phase2(needs: Rates, workers):
-    prob, recipe_counts = make_problem_constraints("phase2", needs)
+def construct_phase2(needs: Rates, settings: Settings, workers: int):
+    prob, recipes, recipe_counts = make_problem_constraints("phase2", needs, settings)
 
     # require the known optimal number of beavers
     beaver_count = 0
     for ri, count in enumerate(recipe_counts):
-        beaver_count += RECIPES[ri].inputs.get(Item.BEAVER, 0) * count
+        beaver_count += recipes[ri].inputs.get(Item.BEAVER, 0) * count
     prob += beaver_count <= workers
 
     # minimize tiles used
-    prob += lpSum(RECIPES[ri].tiles * count for ri, count in enumerate(recipe_counts))
+    prob += lpSum(recipes[ri].tiles * count for ri, count in enumerate(recipe_counts))
 
     print(prob)
 
     return prob
 
 
-def solve(needs: Rates):
-    prob1 = construct_phase1(needs)
+def solve(needs: Rates, settings: Settings):
+    prob1 = construct_phase1(needs, settings)
     status1, log1 = mypulp.solve(prob1)
-    prob2 = construct_phase2(needs, value(prob1.objective))
+    prob2 = construct_phase2(needs, settings, value(prob1.objective))
     status2, log2 = mypulp.solve(prob2)
 
     vars = {var: value(var) for var in prob2.variables()}
