@@ -79,28 +79,58 @@ class ItemList(Static):
 
 class Settings(Static):
     def compose(self) -> ComposeResult:
-        with Collapsible(title="Work Building Periods"):
-            yield Label(
-                "How many hours does it take for a beaver at this building to do one unit of work, e.g. chop one tree tile or harvest one crop tile?"
+        with Collapsible(title="Work Building Rates"):
+            yield Static(
+                "How many units of work (e.g. chop a tree tile) can a beaver at this building do per hour?"
             )
-        yield Input(
-            id="farmhouse_period", value="0.75", type="number", classes="settings"
-        )
-        yield Input(
-            id="lumberjack_period", value="0.75", type="number", classes="settings"
-        )
-        yield Input(
-            id="forester_period", value="0.75", type="number", classes="settings"
-        )
-        yield Input(
-            id="scavenger_period", value="0.75", type="number", classes="settings"
-        )
-        yield Input(id="tapper_period", value="0.75", type="number", classes="settings")
-        yield Static("Global Settings")
-        # working hours
-        yield Input(id="working_hours", value="16", type="integer", classes="settings")
-        # efficiency
-        yield Input(id="efficiency", value="0.9", type="number", classes="settings")
+        with VerticalScroll():
+            with Horizontal(classes="labeled-setting"):
+                yield Label("Farmhouse")
+                yield Input(
+                    id="farmhouse_rate",
+                    value="0.75",
+                    type="number",
+                )
+                yield Label("per hour", classes="labeled-setting unit")
+            with Horizontal(classes="labeled-setting"):
+                yield Label("Lumberjack")
+                yield Input(
+                    id="lumberjack_rate",
+                    value="0.75",
+                    type="number",
+                )
+                yield Label("per hour", classes="labeled-setting unit")
+            with Horizontal(classes="labeled-setting"):
+                yield Label("Forester")
+                yield Input(
+                    id="forester_rate",
+                    value="0.75",
+                    type="number",
+                )
+                yield Label("per hour", classes="labeled-setting unit")
+            with Horizontal(classes="labeled-setting"):
+                yield Label("Scavenger")
+                yield Input(
+                    id="scavenger_rate",
+                    value="0.75",
+                    type="number",
+                )
+                yield Label("per hour", classes="labeled-setting unit")
+            with Horizontal(classes="labeled-setting"):
+                yield Label("Tapper")
+                yield Input(id="tapper_rate", value="0.75", type="number")
+                yield Label("per hour", classes="labeled-setting unit")
+            yield Static("Global Settings")
+            # working hours
+            with Horizontal(classes="labeled-setting"):
+                yield Label("Working Hours")
+                yield Input(id="working_hours", value="16", type="integer")
+                yield Label("hours", classes="labeled-setting unit")
+            # efficiency
+            with Horizontal(classes="labeled-setting"):
+                yield Label("Efficiency")
+                yield Input(id="efficiency", value="0.9", type="number")
+                yield Label("", classes="labeled-setting unit")  # takes up space
 
     class Changed(Message):
         def __init__(self, data):
@@ -114,11 +144,11 @@ class Settings(Static):
         # retrieve all settings
         data = {}
         for float_key in [
-            "farmhouse_period",
-            "lumberjack_period",
-            "forester_period",
-            "scavenger_period",
-            "tapper_period",
+            "farmhouse_rate",
+            "lumberjack_rate",
+            "forester_rate",
+            "scavenger_rate",
+            "tapper_rate",
             "efficiency",
         ]:
             if event.validation_result.is_valid:

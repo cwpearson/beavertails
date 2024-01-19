@@ -19,3 +19,23 @@
     height: 1fr;
     width: 3fr;
 }
+
+
+.labeled-setting {
+    height: 3;
+
+    &.unit {
+        width: 1fr;
+        content-align: left middle;
+    }
+    
+}
+.labeled-setting Label {
+    width: 2fr;
+    content-align: right middle;
+    height: 1fr;
+
+}
+.labeled-setting Input {
+    width: 4fr;
+}
