@@ -37,8 +37,9 @@ class ItemInput(Static):
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         """gather up requested needs and post them up"""
-        # event.stop()  # don't bubble up
-        if event.validation_result == True:
+        # event.stop()  # don't bubble up the changed input event
+        # raise RuntimeError(event.validation_result)
+        if event.validation_result.is_valid:
             data = {}
             for item in Item:
                 data[item] = float(self.query_one(f"#{item.name}-input").value)
@@ -75,45 +76,31 @@ class ItemList(Static):
             yield ItemInput(classes="item-input")
             yield ItemOutput(id="results")
 
-    class ModelLog(Message):
-        def __init__(self, log):
-            self.log = log
-            super().__init__()
-
-    @work(exclusive=True)
-    async def run_model(self):
-        needs = Rates({})
-        for item in Item:
-            inp = self.query_one(f"#{item.name}-input")
-            rate = float(inp.value)
-            if rate != 0:
-                needs.rates[item] = rate
-        results = solve(needs)
-        self.query_one("#results").data = results["vars"]
-
-        # send a message for parent to update log
-        self.post_message(self.ModelLog(results["log"]))
-
-    async def on_input_submitted(self, event: Input.Submitted) -> None:
-        self.run_model()
-
 
 class Settings(Static):
     def compose(self) -> ComposeResult:
-        with Collapsible(title="Work Periods"):
+        with Collapsible(title="Work Building Periods"):
             yield Label(
-                "How many hours does it take for a beaver at this building to do one unit of work?"
+                "How many hours does it take for a beaver at this building to do one unit of work, e.g. chop one tree tile or harvest one crop tile?"
             )
-        yield Input(id="farmhouse_period", value="0.75", type="number")
-        yield Input(id="lumberjack_period", value="0.75", type="number")
-        yield Input(id="forester_period", value="0.75", type="number")
-        yield Input(id="scavenger_period", value="0.75", type="number")
-        yield Input(id="tapper_period", value="0.75", type="number")
-        yield Static("Global")
+        yield Input(
+            id="farmhouse_period", value="0.75", type="number", classes="settings"
+        )
+        yield Input(
+            id="lumberjack_period", value="0.75", type="number", classes="settings"
+        )
+        yield Input(
+            id="forester_period", value="0.75", type="number", classes="settings"
+        )
+        yield Input(
+            id="scavenger_period", value="0.75", type="number", classes="settings"
+        )
+        yield Input(id="tapper_period", value="0.75", type="number", classes="settings")
+        yield Static("Global Settings")
         # working hours
-        yield Input(id="working_hours", value="16", type="integer")
+        yield Input(id="working_hours", value="16", type="integer", classes="settings")
         # efficiency
-        yield Input(id="efficiency", value="0.9", type="number")
+        yield Input(id="efficiency", value="0.9", type="number", classes="settings")
 
     class Changed(Message):
         def __init__(self, data):
@@ -134,12 +121,12 @@ class Settings(Static):
             "tapper_period",
             "efficiency",
         ]:
-            if event.validation_result == True:
+            if event.validation_result.is_valid:
                 data[float_key] = float(self.query_one(f"#{float_key}").value)
         for int_key in [
             "working_hours",
         ]:
-            if event.validation_result == True:
+            if event.validation_result.is_valid:
                 data[int_key] = int(self.query_one(f"#{int_key}").value)
         # send them up
         self.post_message(self.Changed(data))
@@ -159,17 +146,28 @@ class BeavertailsApp(App):
             yield Settings(id="settings")
             yield Label(id="log")
 
-    def on_item_list_model_log(self, message: ItemList.ModelLog) -> None:
-        """the name of this function makes textual pick it up as a handler"""
-        self.query_one("#log").update(message.log)
+    class ModelLog(Message):
+        def __init__(self, log):
+            self.log = log
+            super().__init__()
+
+    @work(exclusive=True)
+    async def run_model(self):
+        needs = Rates({})
+        for item, rate in self.needs.items():
+            needs.rates[item] = rate
+        results = solve(needs)
+        self.query_one("#results").data = results["vars"]
+        self.query_one("#log").update(results["log"])
 
     def on_settings_changed(self, message: Settings.Changed) -> None:
         """capture changed settings"""
         self.settings = message.data
 
-    def on_item_input_needs(self, message: ItemInput.Needs) -> None:
-        """capture changed needs"""
+    async def on_item_input_needs(self, message: ItemInput.Needs) -> None:
+        """capture changed needs and run the solver"""
         self.needs = message.data
+        self.run_model()
 
 
 if __name__ == "__main__":
