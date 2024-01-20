@@ -21,6 +21,7 @@ from beavertails.lib import Item, Rates, solve
 
 class ItemInput(Static):
     def compose(self) -> ComposeResult:
+        yield Static("Press Enter after inputting needed item rates")
         with VerticalScroll():
             for item in Item:
                 with Horizontal(classes="item-input-row"):
@@ -30,6 +31,7 @@ class ItemInput(Static):
                         value="0",
                         validators=[Number(minimum=0)],
                     )
+                    yield Label("per hour")
 
     class Needs(Message):
         def __init__(self, data):
