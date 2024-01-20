@@ -100,7 +100,11 @@ def recipe_with_settings(raw_recipe: dict, settings: Settings) -> Recipe:
         else:
             active_hours = numeric(raw_recipe["working_hours"])
             r_inputs[Item[k]] = (
-                numeric(v) * active_hours / 24 / numeric(raw_recipe["period"])
+                numeric(v)
+                * active_hours
+                / 24
+                / numeric(raw_recipe["period"])
+                * settings.efficiency
             )
     r_outputs = {}
     for k, v in raw_recipe.get("outputs", {}).items():
@@ -109,7 +113,11 @@ def recipe_with_settings(raw_recipe: dict, settings: Settings) -> Recipe:
         else:
             active_hours = numeric(raw_recipe["working_hours"])
             r_outputs[Item[k]] = (
-                numeric(v) * active_hours / 24 / numeric(raw_recipe["period"])
+                numeric(v)
+                * active_hours
+                / 24
+                / numeric(raw_recipe["period"])
+                * settings.efficiency
             )
 
     return Recipe(
