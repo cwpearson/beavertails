@@ -67,18 +67,12 @@ pyinstaller beavertails/tui.py --add-data "beavertails/static;./beavertails/stat
 
 - [x] TUI using textual
 - [x] include recipe utilization in the model
-  - [x] beavers should be treated differently (e.g., a n underutilized recipe still consumes a beaver)
-  - [x] the granularity should not go from [0..1) but (0..1]
-  - [ ] do all recipe math in reals
-    - [ ] a partial recipe still consumes full beavers
-    - [ ] for buildings where fewer beavers are needed, have a separate recipe for that building
-    - [ ] round up to integers for the objective
-      - `y=ceil(x)` -> `x <= y < x + 1` and y is an integer
-- [ ] configurable workday length
-- [ ] configurable other parameters
+- [x] configurable workday length
+- [x] configurable other parameters
 - [ ] use `.spec` for pyInstaller
-- [ ] Beavers eat multiple foods
-- [ ] worker efficiencies
+- [x] Beavers eat multiple foods
+- [x] global efficiency
+  - [ ] individual recipe efficinecies
 - [ ] injuries
 - [ ] well-being
 

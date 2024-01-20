@@ -43,7 +43,7 @@
         "input_workers": 3
     },
     {
-        "name": "Farmhouse (Carrot)",
+        "name": "Farmhouse/3 (Carrot)",
         "tiles": 4,
         "inputs": {
             "CARROT_CROP": 3
@@ -51,12 +51,38 @@
         "outputs": {
             "CARROT": 3
         },
-        "period": "settings.farmhouse_period",
+        "period": "settings.farmhouse_period * 3 / 3",
         "working_hours": "settings.working_hours",
         "input_workers": 3
     },
     {
-        "name": "Farmhouse (Wheat)",
+        "name": "Farmhouse/2 (Carrot)",
+        "tiles": 4,
+        "inputs": {
+            "CARROT_CROP": 3
+        },
+        "outputs": {
+            "CARROT": 3
+        },
+        "period": "settings.farmhouse_period * 3 / 2",
+        "working_hours": "settings.working_hours",
+        "input_workers": 2
+    },
+    {
+        "name": "Farmhouse/1 (Carrot)",
+        "tiles": 4,
+        "inputs": {
+            "CARROT_CROP": 3
+        },
+        "outputs": {
+            "CARROT": 3
+        },
+        "period": "settings.farmhouse_period * 3 / 1",
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
+    },
+    {
+        "name": "Farmhouse/3 (Wheat)",
         "tiles": 4,
         "inputs": {
             "WHEAT_CROP": 3
@@ -64,9 +90,35 @@
         "outputs": {
             "WHEAT": 3
         },
-        "period": "settings.farmhouse_period",
+        "period": "settings.farmhouse_period * 3 / 3",
         "working_hours": "settings.working_hours",
         "input_workers": 3
+    },
+    {
+        "name": "Farmhouse/2 (Wheat)",
+        "tiles": 4,
+        "inputs": {
+            "WHEAT_CROP": 3
+        },
+        "outputs": {
+            "WHEAT": 3
+        },
+        "period": "settings.farmhouse_period * 3 / 2",
+        "working_hours": "settings.working_hours",
+        "input_workers": 2
+    },
+    {
+        "name": "Farmhouse/1 (Wheat)",
+        "tiles": 4,
+        "inputs": {
+            "WHEAT_CROP": 3
+        },
+        "outputs": {
+            "WHEAT": 3
+        },
+        "period": "settings.farmhouse_period * 3 / 1",
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
     },
     {
         "name": "Forester",
@@ -107,26 +159,36 @@
         "input_workers": 1
     },
     {
-        "name": "Lodge (eat Carrots)",
+        "name": "Lodge",
         "tiles": 4,
-        "inputs": {
-            "WATER": "3 * 2.25",
-            "CARROT": "3 * 2.75"
+        "outputs": {
+            "BED": 3
         },
-        "period": 24,
-        "working_hours": 24,
-        "output_workers": 3
+        "period": 24
     },
     {
-        "name": "Lodge (eat Bread)",
-        "tiles": 4,
+        "name": "Beaver (eat Carrots)",
+        "tiles": 0,
         "inputs": {
-            "WATER": "3 * 2.25",
-            "BREAD": "3 * 2.75"
+            "WATER": 2.25,
+            "CARROT": 2.75,
+            "BED": 1
         },
         "period": 24,
         "working_hours": 24,
-        "output_workers": 3
+        "output_workers": 1
+    },
+    {
+        "name": "Beaver (eat Bread)",
+        "tiles": 0,
+        "inputs": {
+            "WATER": 2.25,
+            "BREAD": 2.75,
+            "BED": 1
+        },
+        "period": 24,
+        "working_hours": 24,
+        "output_workers": 1
     },
     {
         "name": "Lumberjack (Oak)",

@@ -81,7 +81,7 @@ ITEM_IDS = dict((item, i) for i, item in enumerate(Item))
 
 def recipe_with_settings(raw_recipe: dict, settings: Settings) -> Recipe:
     """convert a dict to a Recipe.
-    BEAVER and POWER are already a rate, so don't divide by time"""
+    BED and POWER are already a rate, so don't divide by time"""
 
     # numeric() is running eval, and the json
     # recipe definitions are looking for specific variables to be
@@ -107,7 +107,7 @@ def recipe_with_settings(raw_recipe: dict, settings: Settings) -> Recipe:
 
     r_inputs = {}
     for k, v in raw_recipe.get("inputs", {}).items():
-        if k in ("POWER"):
+        if k in ("BED", "POWER"):
             r_inputs[Item[k]] = numeric(v)
         else:
             active_hours = numeric(raw_recipe["working_hours"])
@@ -117,7 +117,7 @@ def recipe_with_settings(raw_recipe: dict, settings: Settings) -> Recipe:
             r_inputs[Item[k]] = input_rate
     r_outputs = {}
     for k, v in raw_recipe.get("outputs", {}).items():
-        if k in ("POWER"):
+        if k in ("BED", "POWER"):
             r_outputs[Item[k]] = numeric(v)
         else:
             active_hours = numeric(raw_recipe["working_hours"])
@@ -184,15 +184,12 @@ def make_problem_constraints(name: str, needs: Rates, settings: Settings):
         r.input_workers * recipe_counts_int[ri] for ri, r in enumerate(recipes)
     )
 
-    # Lodges are the only things that produce workers.
-    # Might seem reasonable to use the integer number of lodges here, but
-    # the number of inputs consumed by those lodges is computed from the
+    # "Beaver" pseudo-recipe is the only thing that produces workers
+    # Might seem reasonable to use the integer number here, but
+    # the number of inputs consumed by the recipe is computed from the
     # "real" variable, which can drift down below the integer by nearly 1
     # according to the rules that rounded partial recipes up
-    # so, for e.g. 6 beavers -> 2 loges -> consume resources according to ~1 lodge
-    #
-    # FIXME: This still isn't quite right, because it we need e.g. 5 workers, we'll calculate
-    # we need 2 lodges, and then 6 beavers worth of food consumption
+    # so, for e.g. 6 beavers -> consume resources according to ~5 beavers
     output_workers = lpSum(
         r.output_workers * recipe_counts_real[ri] for ri, r in enumerate(recipes)
     )

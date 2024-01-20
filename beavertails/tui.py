@@ -195,7 +195,8 @@ class BeavertailsApp(App):
         for key, value in self.settings.items():
             setattr(settings, key, value)
         results = solve(needs, settings)
-        output_dict = dict(results["vars"])
+        # output_dict = dict(results["vars"])
+        output_dict = {k: v for k, v in results["vars"].items() if "_int" in str(k)}
         output_dict["tiles"] = results["tiles"]
         output_dict["beavers"] = results["beavers"]
         self.query_one("#results").data = output_dict
