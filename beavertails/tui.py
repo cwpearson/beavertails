@@ -195,7 +195,10 @@ class BeavertailsApp(App):
         for key, value in self.settings.items():
             setattr(settings, key, value)
         results = solve(needs, settings)
-        self.query_one("#results").data = results["vars"]
+        output_dict = dict(results["vars"])
+        output_dict["tiles"] = results["tiles"]
+        output_dict["beavers"] = results["beavers"]
+        self.query_one("#results").data = output_dict
         self.query_one("#log").update(results["log"])
 
     def on_settings_changed(self, message: Settings.Changed) -> None:

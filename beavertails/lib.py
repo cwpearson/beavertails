@@ -49,13 +49,22 @@ class Settings:
 
 class Recipe:
     def __init__(
-        self, name, tiles, period, inputs=Rates({}), outputs=Rates({}), workers=0
+        self,
+        name,
+        tiles,
+        period,
+        inputs=Rates({}),
+        outputs=Rates({}),
+        input_workers=0,
+        output_workers=0,
     ):
         self.name = name
         self.tiles = tiles
         self.period = period
         self.inputs = inputs
         self.outputs = outputs
+        self.input_workers = input_workers
+        self.output_workers = output_workers
 
     def __repr__(self):
         return self.name
@@ -93,32 +102,29 @@ def recipe_with_settings(raw_recipe: dict, settings: Settings) -> Recipe:
         else:
             raise RuntimeError(f"can't make {o} numeric!")
 
+    input_workers = raw_recipe.get("input_workers", 0)
+    output_workers = raw_recipe.get("output_workers", 0)
+
     r_inputs = {}
     for k, v in raw_recipe.get("inputs", {}).items():
-        if k in ("BEAVER", "POWER"):
+        if k in ("POWER"):
             r_inputs[Item[k]] = numeric(v)
         else:
             active_hours = numeric(raw_recipe["working_hours"])
-            r_inputs[Item[k]] = (
-                numeric(v)
-                * active_hours
-                / 24
-                / numeric(raw_recipe["period"])
-                * settings.efficiency
-            )
+            input_rate = numeric(v) * active_hours / 24 / numeric(raw_recipe["period"])
+            if input_workers > 0:
+                input_rate *= settings.efficiency
+            r_inputs[Item[k]] = input_rate
     r_outputs = {}
     for k, v in raw_recipe.get("outputs", {}).items():
-        if k in ("BEAVER", "POWER"):
+        if k in ("POWER"):
             r_outputs[Item[k]] = numeric(v)
         else:
             active_hours = numeric(raw_recipe["working_hours"])
-            r_outputs[Item[k]] = (
-                numeric(v)
-                * active_hours
-                / 24
-                / numeric(raw_recipe["period"])
-                * settings.efficiency
-            )
+            output_rate = numeric(v) * active_hours / 24 / numeric(raw_recipe["period"])
+            if input_workers > 0:
+                output_rate *= settings.efficiency
+            r_outputs[Item[k]] = output_rate
 
     return Recipe(
         raw_recipe["name"],
@@ -126,6 +132,8 @@ def recipe_with_settings(raw_recipe: dict, settings: Settings) -> Recipe:
         numeric(raw_recipe["period"]),
         inputs=Rates(r_inputs),
         outputs=Rates(r_outputs),
+        input_workers=input_workers,
+        output_workers=output_workers,
     )
 
 
@@ -137,17 +145,22 @@ def make_problem_constraints(name: str, needs: Rates, settings: Settings):
     prob = LpProblem(name, LpMinimize)
     recipes = recipes_with_settings(settings)
 
-    # number of each recipe used, must be integer
-    # multiple versions of each recipe are created
-    # the recipes have different activity factors
-    GRANULARITY = 10
-    recipe_counts = []
+    # FIXME: lodges are not handled properly?
+
+    # two separate numbers of each recipe
+    # a "real" version (non-integer)
+    # an integer version (real rounded up)
+    recipe_counts_real = []
+    recipe_counts_int = []
     for recipe in recipes:
-        vars = []
-        for gi in range(GRANULARITY):
-            af = f"{100*(gi + 1)/GRANULARITY:.1f}%"
-            vars += [LpVariable(f"{recipe.name}_{af}", 0, cat="Integer")]
-        recipe_counts += [vars]
+        var_real = LpVariable(f"{recipe.name}_real", 0, cat="Continuous")
+        var_int = LpVariable(f"{recipe.name}_int", 0, cat="Integer")
+        prob += var_real <= var_int
+        # really we want var_int < var_real + 1
+        # since we're minimizing things, the integer value will be as small as possible anyway
+        # prob += var_int <= (var_real + 0.9999)
+        recipe_counts_real += [var_real]
+        recipe_counts_int += [var_int]
 
     # how much each item is being produced
     # require that the net rate of production for each item is at least 0 (no negative items)
@@ -155,23 +168,10 @@ def make_problem_constraints(name: str, needs: Rates, settings: Settings):
     for item in Item:
         item_rate = 0
         for ri, recipe in enumerate(recipes):
-            # sum up all the different scaled versions of the rate
-            for gi in range(GRANULARITY):
-                if item != Item.BEAVER:
-                    item_rate += (
-                        (gi + 1)
-                        / GRANULARITY
-                        * (
-                            recipe.outputs[item] * recipe_counts[ri][gi]
-                            - recipe.inputs[item] * recipe_counts[ri][gi]
-                        )
-                    )
-                else:
-                    item_rate += (
-                        recipe.outputs[item] * recipe_counts[ri][gi]
-                        - recipe.inputs[item] * recipe_counts[ri][gi]
-                    )
-
+            item_rate += (
+                recipe.outputs[item] * recipe_counts_real[ri]
+                - recipe.inputs[item] * recipe_counts_real[ri]
+            )
         prob += item_rate >= 0
         item_rates += [item_rate]
 
@@ -179,17 +179,35 @@ def make_problem_constraints(name: str, needs: Rates, settings: Settings):
     for item, per_hour in needs.items():
         prob += item_rates[ITEM_IDS[item]] >= per_hour
 
-    return prob, recipes, recipe_counts
+    # require output workers at least match input workers
+    input_workers = lpSum(
+        r.input_workers * recipe_counts_int[ri] for ri, r in enumerate(recipes)
+    )
+
+    # Lodges are the only things that produce workers.
+    # Might seem reasonable to use the integer number of lodges here, but
+    # the number of inputs consumed by those lodges is computed from the
+    # "real" variable, which can drift down below the integer by nearly 1
+    # according to the rules that rounded partial recipes up
+    # so, for e.g. 6 beavers -> 2 loges -> consume resources according to ~1 lodge
+    #
+    # FIXME: This still isn't quite right, because it we need e.g. 5 workers, we'll calculate
+    # we need 2 lodges, and then 6 beavers worth of food consumption
+    output_workers = lpSum(
+        r.output_workers * recipe_counts_real[ri] for ri, r in enumerate(recipes)
+    )
+    prob += output_workers >= input_workers
+
+    return prob, recipes, recipe_counts_int
 
 
 def construct_phase1(needs: Rates, settings: Settings):
     prob, recipes, recipe_counts = make_problem_constraints("phase1", needs, settings)
 
-    # want to minimize the number of beavers input to the system
+    # want to minimize the number of work beavers required
     beaver_count = 0
-    for ri, activity_factor_counts in enumerate(recipe_counts):
-        for gi, count in enumerate(activity_factor_counts):
-            beaver_count += recipes[ri].inputs.get(Item.BEAVER, 0) * count
+    for ri, count in enumerate(recipe_counts):
+        beaver_count += recipes[ri].input_workers * count
     prob += beaver_count
 
     # print(prob)
@@ -202,20 +220,17 @@ def construct_phase2(needs: Rates, settings: Settings, workers: int):
 
     # require that we're using a previously-discovered optimal number of beavers
     beaver_count = 0
-    for ri, activity_factor_counts in enumerate(recipe_counts):
-        for gi, count in enumerate(activity_factor_counts):
-            beaver_count += recipes[ri].inputs.get(Item.BEAVER, 0) * count
+    for ri, count in enumerate(recipe_counts):
+        beaver_count += recipes[ri].input_workers * count
     prob += beaver_count <= workers
 
     # minimize tiles used
     counts = []
-    for ri, activity_factor_counts in enumerate(recipe_counts):
-        for gi, count in enumerate(activity_factor_counts):
-            counts += [recipes[ri].tiles * count]
+    for ri, count in enumerate(recipe_counts):
+        counts += [recipes[ri].tiles * count]
     prob += lpSum(counts)
 
-    print(prob)
-
+    # raise RuntimeError(prob)
     return prob
 
 
@@ -226,12 +241,14 @@ def solve(needs: Rates, settings: Settings):
     status2, log2 = mypulp.solve(prob2)
 
     vars = {var: value(var) for var in prob2.variables()}
-    return {
+    result = {
         "beavers": value(prob1.objective),
         "tiles": value(prob2.objective),
         "log": log1 + log2,
         "vars": vars,
     }
+    # raise RuntimeError(result)
+    return result
 
 
 if __name__ == "__main__":

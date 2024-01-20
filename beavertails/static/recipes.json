@@ -4,20 +4,19 @@
         "tiles": 6,
         "inputs": {
             "WHEAT_FLOUR": 1,
-            "LOG": 0.1,
-            "BEAVER": 1
+            "LOG": 0.1
         },
         "outputs": {
             "BREAD": 5
         },
         "period": 0.42,
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
     },
     {
         "name": "Bot Assembler",
         "tiles": 9,
         "inputs": {
-            "BEAVER": 2,
             "BOT_CHASIS": 1,
             "BOT_ARM": 4,
             "BOT_HEAD": 1,
@@ -27,46 +26,47 @@
             "BOT": 1
         },
         "period": 72,
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 2
     },
     {
         "name": "Farmhouse (Potato)",
         "tiles": 4,
         "inputs": {
-            "BEAVER": 3,
             "POTATO_CROP": 1
         },
         "outputs": {
             "POTATO": 1
         },
         "period": "settings.farmhouse_period",
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 3
     },
     {
         "name": "Farmhouse (Carrot)",
         "tiles": 4,
         "inputs": {
-            "BEAVER": 3,
             "CARROT_CROP": 3
         },
         "outputs": {
             "CARROT": 3
         },
         "period": "settings.farmhouse_period",
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 3
     },
     {
         "name": "Farmhouse (Wheat)",
         "tiles": 4,
         "inputs": {
-            "BEAVER": 3,
             "WHEAT_CROP": 3
         },
         "outputs": {
             "WHEAT": 3
         },
         "period": "settings.farmhouse_period",
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 3
     },
     {
         "name": "Forester",
@@ -75,13 +75,13 @@
             "PLANT_TREE": 1
         },
         "period": "settings.forester_period",
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
     },
     {
         "name": "Grill (potato)",
         "tiles": 6,
         "inputs": {
-            "BEAVER": 1,
             "POTATO": 1,
             "LOG": 0.1
         },
@@ -89,13 +89,13 @@
             "GRILLED_POTATO": 4
         },
         "period": 0.52,
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
     },
     {
         "name": "Gristmill (wheat flour)",
         "tiles": 6,
         "inputs": {
-            "BEAVER": 1,
             "POWER": 60,
             "WHEAT": 1
         },
@@ -103,7 +103,8 @@
             "WHEAT_FLOUR": 1
         },
         "period": 0.78,
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
     },
     {
         "name": "Lodge (eat Carrots)",
@@ -112,11 +113,9 @@
             "WATER": "3 * 2.25",
             "CARROT": "3 * 2.75"
         },
-        "outputs": {
-            "BEAVER": 3
-        },
         "period": 24,
-        "working_hours": 24
+        "working_hours": 24,
+        "output_workers": 3
     },
     {
         "name": "Lodge (eat Bread)",
@@ -125,30 +124,27 @@
             "WATER": "3 * 2.25",
             "BREAD": "3 * 2.75"
         },
-        "outputs": {
-            "BEAVER": 3
-        },
         "period": 24,
-        "working_hours": 24
+        "working_hours": 24,
+        "output_workers": 3
     },
     {
         "name": "Lumberjack (Oak)",
         "tiles": 1,
         "inputs": {
-            "BEAVER": 1,
             "TREE_OAK": 1
         },
         "outputs": {
             "LOG": 8
         },
         "period": "settings.lumberjack_period",
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
     },
     {
         "name": "Lumber Mill",
         "tiles": 6,
         "inputs": {
-            "BEAVER": 1,
             "LOG": 1,
             "POWER": 50
         },
@@ -156,7 +152,8 @@
             "PLANK": 1
         },
         "period": 1.3,
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
     },
     {
         "name": "Oak (logs)",
@@ -183,7 +180,6 @@
         "name": "Refinery (Potato)",
         "tiles": 6,
         "inputs": {
-            "BEAVER": 2,
             "WATER": 2,
             "POTATO": 2
         },
@@ -191,11 +187,12 @@
             "BIOFUEL": 30
         },
         "period": 3,
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 2
     },
     {
         "name": "Water Wheel",
-        "tiles": 3,
+        "tiles": 6,
         "outputs": {
             "POWER": 200
         },
@@ -231,20 +228,17 @@
     {
         "name": "Water Pump",
         "tiles": 4,
-        "inputs": {
-            "BEAVER": 1
-        },
         "outputs": {
             "WATER": 1
         },
         "period": 0.33,
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
     },
     {
         "name": "Bot Part Factory (chasis)",
         "tiles": 9,
         "inputs": {
-            "BEAVER": 2,
             "PLANK": 5,
             "BIOFUEL": 1,
             "METAL_BLOCK": 1,
@@ -254,13 +248,13 @@
             "BOT_CHASIS": 1
         },
         "period": 18,
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 2
     },
     {
         "name": "Bot Part Factory (head)",
         "tiles": 9,
         "inputs": {
-            "BEAVER": 2,
             "PLANK": 1,
             "GEAR": 3,
             "METAL_BLOCK": 1,
@@ -270,13 +264,13 @@
             "BOT_HEAD": 1
         },
         "period": 18,
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 2
     },
     {
         "name": "Bot Part Factory (arm)",
         "tiles": 9,
         "inputs": {
-            "BEAVER": 2,
             "PLANK": 1,
             "GEAR": 3,
             "POWER": 150
@@ -285,13 +279,13 @@
             "BOT_ARM": 1
         },
         "period": 4.5,
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 2
     },
     {
         "name": "Gear Workshop",
         "tiles": 6,
         "inputs": {
-            "BEAVER": 1,
             "PLANK": 1,
             "POWER": 120
         },
@@ -299,13 +293,13 @@
             "GEAR": 1
         },
         "period": 3,
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
     },
     {
         "name": "Smelter",
         "tiles": 8,
         "inputs": {
-            "BEAVER": 1,
             "SCRAP_METAL": 2,
             "LOG": 0.2,
             "POWER": 200
@@ -314,13 +308,13 @@
             "METAL_BLOCK": 1
         },
         "period": 4,
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
     },
     {
         "name": "Mine (Scrap Metal)",
         "tiles": 25,
         "inputs": {
-            "BEAVER": 10,
             "TREATED_PLANK": 1,
             "GEAR": 1
         },
@@ -328,13 +322,13 @@
             "SCRAP_METAL": 2
         },
         "period": 1.8,
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 10
     },
     {
         "name": "Wood workshop",
         "tiles": 8,
         "inputs": {
-            "BEAVER": 1,
             "PLANK": 1,
             "RESIN": 1,
             "POWER": 250
@@ -343,19 +337,20 @@
             "TREATED_PLANK": 1
         },
         "period": 3,
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
     },
     {
         "name": "Tapper's Shack (Resin)",
         "tiles": 4,
         "inputs": {
-            "BEAVER": 1,
             "TREE_PINE_RESIN": 1
         },
         "outputs": {
             "RESIN": 1
         },
         "period": "settings.tapper_period",
-        "working_hours": "settings.working_hours"
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
     }
 ]
