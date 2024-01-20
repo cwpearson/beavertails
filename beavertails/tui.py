@@ -31,7 +31,7 @@ class ItemInput(Static):
                         value="0",
                         validators=[Number(minimum=0)],
                     )
-                    yield Label("per hour")
+                    yield Label("per hour", classes="item-input-row unit")
 
     class Needs(Message):
         def __init__(self, data):

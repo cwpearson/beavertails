@@ -8,6 +8,12 @@
 
 .item-input-row {
     height: 3;
+
+    &.unit {
+        width: 1fr;
+        content-align: left middle;
+        height: 1fr;
+    }
 }
 
 .item-input-row Label {
