@@ -10,7 +10,8 @@
         "outputs": {
             "BREAD": 5
         },
-        "period": 0.42
+        "period": 0.42,
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Bot Assembler",
@@ -25,7 +26,8 @@
         "outputs": {
             "BOT": 1
         },
-        "period": 72
+        "period": 72,
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Farmhouse (Potato)",
@@ -37,7 +39,8 @@
         "outputs": {
             "POTATO": 1
         },
-        "period": "settings.farmhouse_period"
+        "period": "settings.farmhouse_period",
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Farmhouse (Carrot)",
@@ -49,7 +52,8 @@
         "outputs": {
             "CARROT": 3
         },
-        "period": "settings.farmhouse_period"
+        "period": "settings.farmhouse_period",
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Farmhouse (Wheat)",
@@ -61,7 +65,8 @@
         "outputs": {
             "WHEAT": 3
         },
-        "period": "settings.farmhouse_period"
+        "period": "settings.farmhouse_period",
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Forester",
@@ -69,7 +74,8 @@
         "outputs": {
             "PLANT_TREE": 1
         },
-        "period": "settings.forester_period"
+        "period": "settings.forester_period",
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Grill (potato)",
@@ -82,7 +88,8 @@
         "outputs": {
             "GRILLED_POTATO": 4
         },
-        "period": 0.52
+        "period": 0.52,
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Gristmill (wheat flour)",
@@ -95,7 +102,8 @@
         "outputs": {
             "WHEAT_FLOUR": 1
         },
-        "period": 0.78
+        "period": 0.78,
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Lodge (eat Carrots)",
@@ -107,7 +115,8 @@
         "outputs": {
             "BEAVER": 3
         },
-        "period": 24
+        "period": 24,
+        "working_hours": 24
     },
     {
         "name": "Lodge (eat Bread)",
@@ -119,7 +128,8 @@
         "outputs": {
             "BEAVER": 3
         },
-        "period": 24
+        "period": 24,
+        "working_hours": 24
     },
     {
         "name": "Lumberjack (Oak)",
@@ -131,7 +141,8 @@
         "outputs": {
             "LOG": 8
         },
-        "period": "settings.lumberjack_period"
+        "period": "settings.lumberjack_period",
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Lumber Mill",
@@ -144,7 +155,8 @@
         "outputs": {
             "PLANK": 1
         },
-        "period": 1.3
+        "period": 1.3,
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Oak (logs)",
@@ -155,7 +167,8 @@
         "outputs": {
             "TREE_OAK": 8
         },
-        "period": "30 * 24"
+        "period": "30 * 24",
+        "working_hours": 24
     },
     {
         "name": "Pine (resin)",
@@ -163,7 +176,8 @@
         "outputs": {
             "TREE_PINE_RESIN": 2
         },
-        "period": "7 * 24"
+        "period": "7 * 24",
+        "working_hours": 24
     },
     {
         "name": "Refinery (Potato)",
@@ -176,14 +190,16 @@
         "outputs": {
             "BIOFUEL": 30
         },
-        "period": 3
+        "period": 3,
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Water Wheel",
         "tiles": 3,
         "outputs": {
             "POWER": 200
-        }
+        },
+        "period": 24
     },
     {
         "name": "Wheat (crop)",
@@ -191,7 +207,8 @@
         "outputs": {
             "WHEAT_CROP": 3
         },
-        "period": "10 * 24"
+        "period": "10 * 24",
+        "working_hours": 24
     },
     {
         "name": "Potato (Crop)",
@@ -199,7 +216,8 @@
         "outputs": {
             "POTATO_CROP": 1
         },
-        "period": "6 * 14"
+        "period": "6 * 14",
+        "working_hours": 24
     },
     {
         "name": "Carrot (Crop)",
@@ -207,7 +225,8 @@
         "outputs": {
             "CARROT_CROP": 3
         },
-        "period": "4 * 24"
+        "period": "4 * 24",
+        "working_hours": 24
     },
     {
         "name": "Water Pump",
@@ -218,7 +237,8 @@
         "outputs": {
             "WATER": 1
         },
-        "period": 0.33
+        "period": 0.33,
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Bot Part Factory (chasis)",
@@ -233,7 +253,8 @@
         "outputs": {
             "BOT_CHASIS": 1
         },
-        "period": 18
+        "period": 18,
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Bot Part Factory (head)",
@@ -248,7 +269,8 @@
         "outputs": {
             "BOT_HEAD": 1
         },
-        "period": 18
+        "period": 18,
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Bot Part Factory (arm)",
@@ -262,7 +284,8 @@
         "outputs": {
             "BOT_ARM": 1
         },
-        "period": 4.5
+        "period": 4.5,
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Gear Workshop",
@@ -275,7 +298,8 @@
         "outputs": {
             "GEAR": 1
         },
-        "period": 3
+        "period": 3,
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Smelter",
@@ -289,7 +313,8 @@
         "outputs": {
             "METAL_BLOCK": 1
         },
-        "period": 4
+        "period": 4,
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Mine (Scrap Metal)",
@@ -302,7 +327,8 @@
         "outputs": {
             "SCRAP_METAL": 2
         },
-        "period": 1.8
+        "period": 1.8,
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Wood workshop",
@@ -316,7 +342,8 @@
         "outputs": {
             "TREATED_PLANK": 1
         },
-        "period": 3
+        "period": 3,
+        "working_hours": "settings.working_hours"
     },
     {
         "name": "Tapper's Shack (Resin)",
@@ -328,6 +355,7 @@
         "outputs": {
             "RESIN": 1
         },
-        "period": "settings.tapper_period"
+        "period": "settings.tapper_period",
+        "working_hours": "settings.working_hours"
     }
 ]

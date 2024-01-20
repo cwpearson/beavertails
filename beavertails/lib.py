@@ -48,9 +48,12 @@ class Settings:
 
 
 class Recipe:
-    def __init__(self, name, tiles, inputs=Rates({}), outputs=Rates({}), workers=0):
+    def __init__(
+        self, name, tiles, period, inputs=Rates({}), outputs=Rates({}), workers=0
+    ):
         self.name = name
         self.tiles = tiles
+        self.period = period
         self.inputs = inputs
         self.outputs = outputs
 
@@ -83,24 +86,36 @@ def recipe_with_settings(raw_recipe: dict, settings: Settings) -> Recipe:
                 None,  # globals
                 scope,  # locals
             )
-        return o
+        elif isinstance(o, float):
+            return o
+        elif isinstance(o, int):
+            return o
+        else:
+            raise RuntimeError(f"can't make {o} numeric!")
 
     r_inputs = {}
     for k, v in raw_recipe.get("inputs", {}).items():
         if k in ("BEAVER", "POWER"):
             r_inputs[Item[k]] = numeric(v)
         else:
-            r_inputs[Item[k]] = numeric(v) / numeric(raw_recipe["period"])
+            active_hours = numeric(raw_recipe["working_hours"])
+            r_inputs[Item[k]] = (
+                numeric(v) * active_hours / 24 / numeric(raw_recipe["period"])
+            )
     r_outputs = {}
     for k, v in raw_recipe.get("outputs", {}).items():
         if k in ("BEAVER", "POWER"):
             r_outputs[Item[k]] = numeric(v)
         else:
-            r_outputs[Item[k]] = numeric(v) / numeric(raw_recipe["period"])
+            active_hours = numeric(raw_recipe["working_hours"])
+            r_outputs[Item[k]] = (
+                numeric(v) * active_hours / 24 / numeric(raw_recipe["period"])
+            )
 
     return Recipe(
         raw_recipe["name"],
         int(raw_recipe["tiles"]),
+        numeric(raw_recipe["period"]),
         inputs=Rates(r_inputs),
         outputs=Rates(r_outputs),
     )
@@ -115,20 +130,40 @@ def make_problem_constraints(name: str, needs: Rates, settings: Settings):
     recipes = recipes_with_settings(settings)
 
     # number of each recipe used, must be integer
+    # multiple versions of each recipe are created
+    # the recipes have different activity factors
+    GRANULARITY = 10
     recipe_counts = []
     for recipe in recipes:
-        var = LpVariable(recipe.name, 0, cat="Integer")
-        recipe_counts += [var]
+        vars = []
+        for gi in range(GRANULARITY):
+            af = f"{100*(gi + 1)/GRANULARITY:.1f}%"
+            vars += [LpVariable(f"{recipe.name}_{af}", 0, cat="Integer")]
+        recipe_counts += [vars]
 
     # how much each item is being produced
     # require that the net rate of production for each item is at least 0 (no negative items)
     item_rates = []
     for item in Item:
-        item_rate = lpSum(
-            recipe.outputs[item] * recipe_counts[ri]
-            - recipe.inputs[item] * recipe_counts[ri]
-            for ri, recipe in enumerate(recipes)
-        )
+        item_rate = 0
+        for ri, recipe in enumerate(recipes):
+            # sum up all the different scaled versions of the rate
+            for gi in range(GRANULARITY):
+                if item != Item.BEAVER:
+                    item_rate += (
+                        (gi + 1)
+                        / GRANULARITY
+                        * (
+                            recipe.outputs[item] * recipe_counts[ri][gi]
+                            - recipe.inputs[item] * recipe_counts[ri][gi]
+                        )
+                    )
+                else:
+                    item_rate += (
+                        recipe.outputs[item] * recipe_counts[ri][gi]
+                        - recipe.inputs[item] * recipe_counts[ri][gi]
+                    )
+
         prob += item_rate >= 0
         item_rates += [item_rate]
 
@@ -142,27 +177,34 @@ def make_problem_constraints(name: str, needs: Rates, settings: Settings):
 def construct_phase1(needs: Rates, settings: Settings):
     prob, recipes, recipe_counts = make_problem_constraints("phase1", needs, settings)
 
-    # want to minimize the number of beavers
+    # want to minimize the number of beavers input to the system
     beaver_count = 0
-    for ri, count in enumerate(recipe_counts):
-        beaver_count += recipes[ri].inputs.get(Item.BEAVER, 0) * count
+    for ri, activity_factor_counts in enumerate(recipe_counts):
+        for gi, count in enumerate(activity_factor_counts):
+            beaver_count += recipes[ri].inputs.get(Item.BEAVER, 0) * count
     prob += beaver_count
 
     # print(prob)
+    # raise RuntimeError(prob)
     return prob
 
 
 def construct_phase2(needs: Rates, settings: Settings, workers: int):
     prob, recipes, recipe_counts = make_problem_constraints("phase2", needs, settings)
 
-    # require the known optimal number of beavers
+    # require that we're using a previously-discovered optimal number of beavers
     beaver_count = 0
-    for ri, count in enumerate(recipe_counts):
-        beaver_count += recipes[ri].inputs.get(Item.BEAVER, 0) * count
+    for ri, activity_factor_counts in enumerate(recipe_counts):
+        for gi, count in enumerate(activity_factor_counts):
+            beaver_count += recipes[ri].inputs.get(Item.BEAVER, 0) * count
     prob += beaver_count <= workers
 
     # minimize tiles used
-    prob += lpSum(recipes[ri].tiles * count for ri, count in enumerate(recipe_counts))
+    counts = []
+    for ri, activity_factor_counts in enumerate(recipe_counts):
+        for gi, count in enumerate(activity_factor_counts):
+            counts += [recipes[ri].tiles * count]
+    prob += lpSum(counts)
 
     print(prob)
 

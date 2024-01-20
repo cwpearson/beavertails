@@ -79,7 +79,7 @@ class ItemList(Static):
 
 class Settings(Static):
     def compose(self) -> ComposeResult:
-        with Collapsible(title="Work Building Rates"):
+        with Collapsible(title="Work Building Periods"):
             yield Static(
                 "How long does it take this building to do one unit of work (e.g. chop a tree tile)?"
             )
@@ -183,10 +183,16 @@ class BeavertailsApp(App):
 
     @work(exclusive=True)
     async def run_model(self):
+        # construct needs
         needs = Rates({})
         for item, rate in self.needs.items():
             needs.rates[item] = rate
-        results = solve(needs, beavertails.lib.Settings())
+
+        # construct settings
+        settings = beavertails.lib.Settings()
+        for key, value in self.settings.items():
+            setattr(settings, key, value)
+        results = solve(needs, settings)
         self.query_one("#results").data = results["vars"]
         self.query_one("#log").update(results["log"])
 

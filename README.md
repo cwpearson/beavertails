@@ -66,6 +66,9 @@ pyinstaller beavertails/tui.py --add-data "beavertails/static;./beavertails/stat
 ## Roadmap
 
 - [x] TUI using textual
+- [ ] include recipe utilization in the model
+  - [ ] beavers should be treated differently (e.g., a n underutilized recipe still consumes a beaver)
+  - [ ] the granularity should not go from [0..1) but (0..1]
 - [ ] configurable workday length
 - [ ] configurable other parameters
 - [ ] use `.spec` for pyInstaller
