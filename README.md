@@ -14,6 +14,9 @@
 
 An unofficial, unaffiliated, third-party resource planning assistant for [Mechanistry](https://mechanistry.com/)'s *Timberborn* video game.
 
+![](macos-0.2.6.png)
+*beavertails 0.2.6 on macOS*
+
 ## Binary Releases
 
 Prebuilt binaries are available on the [releases](https://github.com/cwpearson/beavertails/releases) page for
