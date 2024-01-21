@@ -21,6 +21,17 @@
     width: 1fr;
     border: white;
 }
+.output-recipe {
+    height:1;
+
+    &.name {
+        width: 2fr;
+    }
+    &.value {
+        width: 1fr;
+    }
+}
+
 
 .item-input {
     width: 2fr; /*otherwise, grow to fill screen width*/

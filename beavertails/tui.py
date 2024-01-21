@@ -60,10 +60,16 @@ class ItemOutput(Static):
             yield Label("tiles", id="tiles-name", classes="tiles-name")
             yield Label(id="tiles-value", classes="tiles-value")
         with VerticalScroll(id="item-list"):
-            yield Label(classes="output-recipe")
+            with Horizontal(classes="output-recipe"):
+                yield Label(classes="output-recipe name")
+                yield Label(classes="output-recipe value")
 
     def add_item(self, name, value):
-        new_entry = Label(f"{name}: {value}")
+        new_entry = Horizontal(
+            Label(f"{name}", classes="output-recipe name"),
+            Label(f"{value}", classes="output-recipe value"),
+            classes="output-recipe",
+        )
         self.query_one("#item-list").mount(new_entry)
 
     def remove_items(self):

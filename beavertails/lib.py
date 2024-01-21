@@ -243,9 +243,16 @@ def solve(needs: Rates, settings: Settings):
     prob2, var_names2 = construct_phase2(needs, settings, value(prob1.objective))
     status2, log2 = mypulp.solve(prob2)
 
-    vars = {
-        var_names2[var]: value(var) for var in prob2.variables() if "_int" in str(var)
-    }
+    # only return integer recipe values
+    vars = {}
+    for var in prob2.variables():
+        if "_int" in str(var):
+            name = var_names2[var]
+            try:
+                val = int(value(var))
+            except:
+                val = value(var)
+            vars[name] = val
     result = {
         "beavers": value(prob1.objective),
         "tiles": value(prob2.objective),
