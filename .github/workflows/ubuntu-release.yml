@@ -32,12 +32,13 @@ jobs:
           --add-data beavertails/static:./beavertails/static \
           --add-data beavertails/beavertails.tcss:. \
           --collect-all pulp \
-          --onefile --nowindow --noconfirm
-        cp dist/tui dist/tuibeavertails_ubu2004
-        chmod +x dist/tuibeavertails_ubu2004
+          --onefile --nowindow --noconfirm \
+          --name beavertails
+        chmod +x dist/beavertails
+        cd dist; zip -r beavertails_ubu2004.zip beavertails
     - name: Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "dist/tuibeavertails_ubu2004"
+        artifacts: "dist/beavertails_ubu2004.zip"
         allowUpdates: True
 
