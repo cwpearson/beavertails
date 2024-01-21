@@ -27,12 +27,18 @@ jobs:
       shell: bash
       run: scripts/make-version.sh
     - name: Build with pyInstaller
+      shell: bash
       run: |
-        pyinstaller beavertails/tui.py --add-data "beavertails/static;./beavertails/static" --add-data "beavertails/beavertails.tcss;." --collect-all pulp --onefile --nowindow --noconfirm
-        cp dist/tui.exe dist/beavertails_win2019.exe
+        pyinstaller beavertails/tui.py \
+          --add-data "beavertails/static;./beavertails/static" \
+          --add-data "beavertails/beavertails.tcss;." \
+          --collect-all pulp \
+          --onefile --nowindow --noconfirm \
+          --name beavertails.exe
+        cd dist; zip -r beavertails_win2019.zip beavertails.exe
     - name: Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "dist/beavertails_win2019.exe"
+        artifacts: "dist/beavertails_win2019.zip"
         allowUpdates: True
 
