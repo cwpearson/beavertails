@@ -49,23 +49,35 @@ class ItemInput(Static):
 
 
 class ItemOutput(Static):
+    beavers = reactive(None)
+    tiles = reactive(None)
     data = reactive(dict())
 
     def compose(self) -> ComposeResult:
+        yield Label(id="output-beavers")
+        yield Label(id="output-tiles")
         with VerticalScroll(id="item-list"):
-            yield Label()
+            yield Label(classes="output-recipe")
 
     def add_item(self, name, value):
         new_entry = Label(f"{name}: {value}")
         self.query_one("#item-list").mount(new_entry)
 
     def remove_items(self):
-        entries = self.query("Label")
+        entries = self.query(".output-recipe")
         for e in entries:
             e.remove()
 
+    def watch_beavers(self, beavers):
+        if beavers is not None:
+            self.query_one("#output-beavers").update(f"beavers: {beavers}")
+
+    def watch_tiles(self, tiles):
+        if self.tiles is not None:
+            self.query_one("#output-tiles").update(f"tiles: {tiles}")
+
     def watch_data(self, data):
-        """called when items changes"""
+        """called when data changes"""
         self.remove_items()
         for name, value in data.items():
             if float(value) > 0:
@@ -197,9 +209,9 @@ class BeavertailsApp(App):
         results = solve(needs, settings)
         # output_dict = dict(results["vars"])
         output_dict = {k: v for k, v in results["vars"].items() if "_int" in str(k)}
-        output_dict["tiles"] = results["tiles"]
-        output_dict["beavers"] = results["beavers"]
         self.query_one("#results").data = output_dict
+        self.query_one("#results").beavers = results["beavers"]
+        self.query_one("#results").tiles = results["tiles"]
         self.query_one("#log").update(results["log"])
 
     def on_settings_changed(self, message: Settings.Changed) -> None:

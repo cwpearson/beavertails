@@ -69,10 +69,11 @@ pyinstaller beavertails/tui.py --add-data "beavertails/static;./beavertails/stat
 - [x] include recipe utilization in the model
 - [x] configurable workday length
 - [x] configurable other parameters
-- [ ] use `.spec` for pyInstaller
 - [x] Beavers eat multiple foods
 - [x] global efficiency
-  - [ ] individual recipe efficinecies
+  - [ ] individual recipe efficiencies
+- [ ] enable/disable recipes
 - [ ] injuries
 - [ ] well-being
+- [ ] use `.spec` for pyInstaller
 
