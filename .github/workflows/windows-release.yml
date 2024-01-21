@@ -26,10 +26,10 @@ jobs:
     - name: Build with pyInstaller
       run: |
         pyinstaller beavertails/tui.py --add-data "beavertails/static;./beavertails/static" --add-data "beavertails/beavertails.tcss;." --collect-all pulp --onefile --nowindow --noconfirm
-        cp dist/tui.exe dist/tui_win2019.exe
+        cp dist/tui.exe dist/beavertails_win2019.exe
     - name: Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "dist/tui_win2019.exe"
+        artifacts: "dist/beavertails_win2019.exe"
         allowUpdates: True
 

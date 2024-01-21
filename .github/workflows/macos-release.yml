@@ -30,10 +30,11 @@ jobs:
           --add-data beavertails/beavertails.tcss:. \
           --collect-all pulp \
           --onefile --nowindow --noconfirm
-        cp dist/tui dist/tui_macOS
+        cp dist/tui dist/beavertails_macOS
+        chmod +x dist/beavertails_macOS
     - name: Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "dist/tui_macOS"
+        artifacts: "dist/beavertails_macOS"
         allowUpdates: True
 

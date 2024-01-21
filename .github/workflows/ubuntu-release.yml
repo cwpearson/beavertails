@@ -30,10 +30,11 @@ jobs:
           --add-data beavertails/beavertails.tcss:. \
           --collect-all pulp \
           --onefile --nowindow --noconfirm
-        cp dist/tui dist/tui_ubu2004
+        cp dist/tui dist/tuibeavertails_ubu2004
+        chmod +x dist/tuibeavertails_ubu2004
     - name: Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "dist/tui_ubu2004"
+        artifacts: "dist/tuibeavertails_ubu2004"
         allowUpdates: True
 
