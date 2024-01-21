@@ -5,3 +5,4 @@
 **/.DS_Store
 dist
 build
+**/_version.py
