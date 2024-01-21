@@ -33,12 +33,13 @@ jobs:
           --add-data beavertails/static:./beavertails/static \
           --add-data beavertails/beavertails.tcss:. \
           --collect-all pulp \
-          --onefile --nowindow --noconfirm
-        cp dist/tui dist/beavertails_macOS
-        chmod +x dist/beavertails_macOS
+          --onefile --nowindow --noconfirm \
+          --name beavertails
+        chmod +x dist/beavertails
+        zip -r beavertails_macOS.zip dist/beavertails
     - name: Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "dist/beavertails_macOS"
+        artifacts: "beavertails_macOS.zip"
         allowUpdates: True
 

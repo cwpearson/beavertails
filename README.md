@@ -39,7 +39,8 @@ pyinstaller beavertails/tui.py \
   --add-data beavertails/static:./beavertails/static \
   --add-data beavertails/beavertails.tcss:. \
   --collect-all pulp \
-  --onefile
+  --onefile \
+  --name beavertails_macOS
 ```
 
 ## Building for Ubuntu
@@ -49,13 +50,14 @@ pyinstaller beavertails/tui.py \
   --add-data beavertails/static:./beavertails/static \
   --add-data beavertails/beavertails.tcss:. \
   --collect-all pulp \
-  --onefile --nowindow --noconfirm
+  --onefile --nowindow --noconfirm \
+  --name beavertails_ubu2004
 ```
 
 ## Building for Windows
 
 ```bat
-pyinstaller beavertails/tui.py --add-data "beavertails/static;./beavertails/static" --add-data "beavertails/beavertails.tcss;." --collect-all pulp --onefile --nowindow --noconfirm
+pyinstaller beavertails/tui.py --add-data "beavertails/static;./beavertails/static" --add-data "beavertails/beavertails.tcss;." --collect-all pulp --onefile --nowindow --noconfirm --name beavertails_win2019.exe
 ```
 
 ## Acknowledgements
