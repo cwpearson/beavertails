@@ -2,6 +2,26 @@
     width: 1fr; /*otherwise, grow to fill screen width*/
 }
 
+.output-header {
+    height: 3;
+}
+.beavers-name {
+    width: 2fr;
+    border: white;
+}
+.beavers-value {
+    width: 1fr;
+    border: white;
+}
+.tiles-name {
+    width: 2fr;
+    border: white;
+}
+.tiles-value {
+    width: 1fr;
+    border: white;
+}
+
 .item-input {
     width: 2fr; /*otherwise, grow to fill screen width*/
 }

@@ -145,7 +145,7 @@ def make_problem_constraints(name: str, needs: Rates, settings: Settings):
     prob = LpProblem(name, LpMinimize)
     recipes = recipes_with_settings(settings)
 
-    # FIXME: lodges are not handled properly?
+    var_names = {}
 
     # two separate numbers of each recipe
     # a "real" version (non-integer)
@@ -154,7 +154,9 @@ def make_problem_constraints(name: str, needs: Rates, settings: Settings):
     recipe_counts_int = []
     for recipe in recipes:
         var_real = LpVariable(f"{recipe.name}_real", 0, cat="Continuous")
+        var_names[var_real] = recipe.name
         var_int = LpVariable(f"{recipe.name}_int", 0, cat="Integer")
+        var_names[var_int] = recipe.name
         prob += var_real <= var_int
         # really we want var_int < var_real + 1
         # since we're minimizing things, the integer value will be as small as possible anyway
@@ -195,11 +197,13 @@ def make_problem_constraints(name: str, needs: Rates, settings: Settings):
     )
     prob += output_workers >= input_workers
 
-    return prob, recipes, recipe_counts_int
+    return prob, var_names, recipes, recipe_counts_int
 
 
 def construct_phase1(needs: Rates, settings: Settings):
-    prob, recipes, recipe_counts = make_problem_constraints("phase1", needs, settings)
+    prob, var_names, recipes, recipe_counts = make_problem_constraints(
+        "phase1", needs, settings
+    )
 
     # want to minimize the number of work beavers required
     beaver_count = 0
@@ -209,11 +213,13 @@ def construct_phase1(needs: Rates, settings: Settings):
 
     # print(prob)
     # raise RuntimeError(prob)
-    return prob
+    return prob, var_names
 
 
 def construct_phase2(needs: Rates, settings: Settings, workers: int):
-    prob, recipes, recipe_counts = make_problem_constraints("phase2", needs, settings)
+    prob, var_names, recipes, recipe_counts = make_problem_constraints(
+        "phase2", needs, settings
+    )
 
     # require that we're using a previously-discovered optimal number of beavers
     beaver_count = 0
@@ -228,16 +234,18 @@ def construct_phase2(needs: Rates, settings: Settings, workers: int):
     prob += lpSum(counts)
 
     # raise RuntimeError(prob)
-    return prob
+    return prob, var_names
 
 
 def solve(needs: Rates, settings: Settings):
-    prob1 = construct_phase1(needs, settings)
+    prob1, var_names1 = construct_phase1(needs, settings)
     status1, log1 = mypulp.solve(prob1)
-    prob2 = construct_phase2(needs, settings, value(prob1.objective))
+    prob2, var_names2 = construct_phase2(needs, settings, value(prob1.objective))
     status2, log2 = mypulp.solve(prob2)
 
-    vars = {var: value(var) for var in prob2.variables()}
+    vars = {
+        var_names2[var]: value(var) for var in prob2.variables() if "_int" in str(var)
+    }
     result = {
         "beavers": value(prob1.objective),
         "tiles": value(prob2.objective),

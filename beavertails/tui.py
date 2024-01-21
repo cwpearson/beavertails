@@ -54,8 +54,11 @@ class ItemOutput(Static):
     data = reactive(dict())
 
     def compose(self) -> ComposeResult:
-        yield Label(id="output-beavers")
-        yield Label(id="output-tiles")
+        with Horizontal(classes="output-header"):
+            yield Label("beavers", id="beavers-name", classes="beavers-name")
+            yield Label(id="beavers-value", classes="beavers-value")
+            yield Label("tiles", id="tiles-name", classes="tiles-name")
+            yield Label(id="tiles-value", classes="tiles-value")
         with VerticalScroll(id="item-list"):
             yield Label(classes="output-recipe")
 
@@ -70,11 +73,11 @@ class ItemOutput(Static):
 
     def watch_beavers(self, beavers):
         if beavers is not None:
-            self.query_one("#output-beavers").update(f"beavers: {beavers}")
+            self.query_one("#beavers-value").update(f"{beavers}")
 
     def watch_tiles(self, tiles):
         if self.tiles is not None:
-            self.query_one("#output-tiles").update(f"tiles: {tiles}")
+            self.query_one("#tiles-value").update(f"{tiles}")
 
     def watch_data(self, data):
         """called when data changes"""
@@ -208,8 +211,7 @@ class BeavertailsApp(App):
             setattr(settings, key, value)
         results = solve(needs, settings)
         # output_dict = dict(results["vars"])
-        output_dict = {k: v for k, v in results["vars"].items() if "_int" in str(k)}
-        self.query_one("#results").data = output_dict
+        self.query_one("#results").data = results["vars"]
         self.query_one("#results").beavers = results["beavers"]
         self.query_one("#results").tiles = results["tiles"]
         self.query_one("#log").update(results["log"])
