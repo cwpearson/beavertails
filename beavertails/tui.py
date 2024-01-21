@@ -17,6 +17,7 @@ from textual.message import Message
 
 import beavertails
 from beavertails.lib import Item, Rates, solve
+from beavertails.version import VERSION
 
 
 class ItemInput(Static):
@@ -187,6 +188,8 @@ class Settings(Static):
 
 class BeavertailsApp(App):
     """A Textual app"""
+
+    TITLE = f"Beavertails {VERSION}"
 
     CSS_PATH = "beavertails.tcss"
 
