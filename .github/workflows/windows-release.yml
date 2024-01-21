@@ -35,7 +35,7 @@ jobs:
           --collect-all pulp \
           --onefile --nowindow --noconfirm \
           --name beavertails.exe
-        cd dist; zip -r beavertails_win2019.zip beavertails.exe
+        cd dist; powershell Compress-Archive beavertails.exe beavertails_win2019.zip 
     - name: Release
       uses: ncipollo/release-action@v1
       with:
