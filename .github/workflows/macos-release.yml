@@ -36,10 +36,10 @@ jobs:
           --onefile --nowindow --noconfirm \
           --name beavertails
         chmod +x dist/beavertails
-        zip -r beavertails_macOS.zip dist/beavertails
+        cd dist; zip -r beavertails_macOS.zip beavertails
     - name: Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "beavertails_macOS.zip"
+        artifacts: "dist/beavertails_macOS.zip"
         allowUpdates: True
 
