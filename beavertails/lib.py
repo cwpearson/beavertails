@@ -72,9 +72,11 @@ class Recipe:
 
 RECIPES = []
 
-# load additional recipes
-with open(STATIC_DIR / "recipes.json") as f:
-    RECIPES = json.load(f)
+# load additional recipes (any file with 'recipes' in it)
+for e in STATIC_DIR.iterdir():
+    if e.is_file() and "recipes" in e.name:
+        with open(e) as f:
+            RECIPES += json.load(f)
 
 ITEM_IDS = dict((item, i) for i, item in enumerate(Item))
 

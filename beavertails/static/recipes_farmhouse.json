@@ -1,0 +1,158 @@
+[
+    {
+        "name": "Farmhouse/3 (Potato)",
+        "tiles": 4,
+        "inputs": {
+            "POTATO_CROP": 1
+        },
+        "outputs": {
+            "POTATO": 1
+        },
+        "period": "settings.farmhouse_period * 3 / 3",
+        "working_hours": "settings.working_hours",
+        "input_workers": 3
+    },
+    {
+        "name": "Farmhouse/2 (Potato)",
+        "tiles": 4,
+        "inputs": {
+            "POTATO_CROP": 1
+        },
+        "outputs": {
+            "POTATO": 1
+        },
+        "period": "settings.farmhouse_period * 3 / 2",
+        "working_hours": "settings.working_hours",
+        "input_workers": 2
+    },
+    {
+        "name": "Farmhouse/1 (Potato)",
+        "tiles": 4,
+        "inputs": {
+            "POTATO_CROP": 1
+        },
+        "outputs": {
+            "POTATO": 1
+        },
+        "period": "settings.farmhouse_period * 3 / 1",
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
+    },
+    {
+        "name": "Farmhouse/3 (Carrot)",
+        "tiles": 4,
+        "inputs": {
+            "CARROT_CROP": 3
+        },
+        "outputs": {
+            "CARROT": 3
+        },
+        "period": "settings.farmhouse_period * 3 / 3",
+        "working_hours": "settings.working_hours",
+        "input_workers": 3
+    },
+    {
+        "name": "Farmhouse/2 (Carrot)",
+        "tiles": 4,
+        "inputs": {
+            "CARROT_CROP": 3
+        },
+        "outputs": {
+            "CARROT": 3
+        },
+        "period": "settings.farmhouse_period * 3 / 2",
+        "working_hours": "settings.working_hours",
+        "input_workers": 2
+    },
+    {
+        "name": "Farmhouse/1 (Carrot)",
+        "tiles": 4,
+        "inputs": {
+            "CARROT_CROP": 3
+        },
+        "outputs": {
+            "CARROT": 3
+        },
+        "period": "settings.farmhouse_period * 3 / 1",
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
+    },
+    {
+        "name": "Farmhouse/3 (Wheat)",
+        "tiles": 4,
+        "inputs": {
+            "WHEAT_CROP": 3
+        },
+        "outputs": {
+            "WHEAT": 3
+        },
+        "period": "settings.farmhouse_period * 3 / 3",
+        "working_hours": "settings.working_hours",
+        "input_workers": 3
+    },
+    {
+        "name": "Farmhouse/2 (Wheat)",
+        "tiles": 4,
+        "inputs": {
+            "WHEAT_CROP": 3
+        },
+        "outputs": {
+            "WHEAT": 3
+        },
+        "period": "settings.farmhouse_period * 3 / 2",
+        "working_hours": "settings.working_hours",
+        "input_workers": 2
+    },
+    {
+        "name": "Farmhouse/1 (Wheat)",
+        "tiles": 4,
+        "inputs": {
+            "WHEAT_CROP": 3
+        },
+        "outputs": {
+            "WHEAT": 3
+        },
+        "period": "settings.farmhouse_period * 3 / 1",
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
+    },
+    {
+        "name": "Farmhouse/3 (Sunflower)",
+        "tiles": 4,
+        "inputs": {
+            "SUNFLOWER_CROP": 3
+        },
+        "outputs": {
+            "SUNFLOWER_SEED": 3
+        },
+        "period": "settings.farmhouse_period * 3 / 3",
+        "working_hours": "settings.working_hours",
+        "input_workers": 3
+    },
+    {
+        "name": "Farmhouse/2 (Sunflower)",
+        "tiles": 4,
+        "inputs": {
+            "SUNFLOWER_CROP": 3
+        },
+        "outputs": {
+            "SUNFLOWER_SEED": 3
+        },
+        "period": "settings.farmhouse_period * 3 / 2",
+        "working_hours": "settings.working_hours",
+        "input_workers": 2
+    },
+    {
+        "name": "Farmhouse/1 (Sunflower)",
+        "tiles": 4,
+        "inputs": {
+            "SUNFLOWER_CROP": 3
+        },
+        "outputs": {
+            "SUNFLOWER_SEED": 3
+        },
+        "period": "settings.farmhouse_period * 3 / 1",
+        "working_hours": "settings.working_hours",
+        "input_workers": 1
+    }
+]

@@ -14,6 +14,18 @@
         "input_workers": 1
     },
     {
+        "name": "Birch (logs)",
+        "tiles": 1,
+        "inputs": {
+            "PLANT_TREE": 1
+        },
+        "outputs": {
+            "TREE_BIRCH": 1
+        },
+        "period": "9 * 24",
+        "working_hours": 24
+    },
+    {
         "name": "Bot Assembler",
         "tiles": 9,
         "inputs": {
@@ -25,100 +37,9 @@
         "outputs": {
             "BOT": 1
         },
-        "period": 72,
+        "period": 36,
         "working_hours": "settings.working_hours",
         "input_workers": 2
-    },
-    {
-        "name": "Farmhouse (Potato)",
-        "tiles": 4,
-        "inputs": {
-            "POTATO_CROP": 1
-        },
-        "outputs": {
-            "POTATO": 1
-        },
-        "period": "settings.farmhouse_period",
-        "working_hours": "settings.working_hours",
-        "input_workers": 3
-    },
-    {
-        "name": "Farmhouse/3 (Carrot)",
-        "tiles": 4,
-        "inputs": {
-            "CARROT_CROP": 3
-        },
-        "outputs": {
-            "CARROT": 3
-        },
-        "period": "settings.farmhouse_period * 3 / 3",
-        "working_hours": "settings.working_hours",
-        "input_workers": 3
-    },
-    {
-        "name": "Farmhouse/2 (Carrot)",
-        "tiles": 4,
-        "inputs": {
-            "CARROT_CROP": 3
-        },
-        "outputs": {
-            "CARROT": 3
-        },
-        "period": "settings.farmhouse_period * 3 / 2",
-        "working_hours": "settings.working_hours",
-        "input_workers": 2
-    },
-    {
-        "name": "Farmhouse/1 (Carrot)",
-        "tiles": 4,
-        "inputs": {
-            "CARROT_CROP": 3
-        },
-        "outputs": {
-            "CARROT": 3
-        },
-        "period": "settings.farmhouse_period * 3 / 1",
-        "working_hours": "settings.working_hours",
-        "input_workers": 1
-    },
-    {
-        "name": "Farmhouse/3 (Wheat)",
-        "tiles": 4,
-        "inputs": {
-            "WHEAT_CROP": 3
-        },
-        "outputs": {
-            "WHEAT": 3
-        },
-        "period": "settings.farmhouse_period * 3 / 3",
-        "working_hours": "settings.working_hours",
-        "input_workers": 3
-    },
-    {
-        "name": "Farmhouse/2 (Wheat)",
-        "tiles": 4,
-        "inputs": {
-            "WHEAT_CROP": 3
-        },
-        "outputs": {
-            "WHEAT": 3
-        },
-        "period": "settings.farmhouse_period * 3 / 2",
-        "working_hours": "settings.working_hours",
-        "input_workers": 2
-    },
-    {
-        "name": "Farmhouse/1 (Wheat)",
-        "tiles": 4,
-        "inputs": {
-            "WHEAT_CROP": 3
-        },
-        "outputs": {
-            "WHEAT": 3
-        },
-        "period": "settings.farmhouse_period * 3 / 1",
-        "working_hours": "settings.working_hours",
-        "input_workers": 1
     },
     {
         "name": "Forester",
@@ -138,7 +59,7 @@
             "LOG": 0.1
         },
         "outputs": {
-            "GRILLED_POTATO": 4
+            "POTATO_GRILLED": 4
         },
         "period": 0.52,
         "working_hours": "settings.working_hours",
@@ -167,7 +88,7 @@
         "period": 24
     },
     {
-        "name": "Beaver (eat Carrots)",
+        "name": "Beaver (eat carrots)",
         "tiles": 0,
         "inputs": {
             "WATER": 2.25,
@@ -179,11 +100,23 @@
         "output_workers": 1
     },
     {
-        "name": "Beaver (eat Bread)",
+        "name": "Beaver (eat bread)",
         "tiles": 0,
         "inputs": {
             "WATER": 2.25,
             "BREAD": 2.75,
+            "BED": 1
+        },
+        "period": 24,
+        "working_hours": 24,
+        "output_workers": 1
+    },
+    {
+        "name": "Beaver (eat sunflower seed)",
+        "tiles": 0,
+        "inputs": {
+            "WATER": 2.25,
+            "SUNFLOWER_SEED": 2.75,
             "BED": 1
         },
         "period": 24,
@@ -259,6 +192,15 @@
             "POWER": 200
         },
         "period": 24
+    },
+    {
+        "name": "Sunflower (crop)",
+        "tiles": 1,
+        "outputs": {
+            "SUNFLOWER_CROP": 2
+        },
+        "period": "5*24",
+        "working_hours": 24
     },
     {
         "name": "Wheat (crop)",
